@@ -17,29 +17,16 @@
 package controllers
 
 import base.SpecBase
-import config.FrontendAppConfig
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.AgentCannotRegisterView
 
 class AgentCannotRegisterControllerSpec extends SpecBase {
 
-  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-
   "AgentCannotRegister Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      when(mockAppConfig.agentServicesSignInUrl).thenReturn("agentServicesSignInUrl")
-      when(mockAppConfig.usingAgentServicesUrl).thenReturn("usingAgentServicesUrl")
-      when(mockAppConfig.checkNeedToRegisterUrl).thenReturn("checkNeedToRegisterUrl")
-      when(mockAppConfig.feedbackUrl(any())).thenReturn("feedbackUrl")
-
-      val application = applicationBuilder(userAnswers = None)
-        .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.AgentCannotRegisterController.onPageLoad().url)
@@ -49,11 +36,7 @@ class AgentCannotRegisterControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[AgentCannotRegisterView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(
-          "agentServicesSignInUrl",
-          "usingAgentServicesUrl",
-          "checkNeedToRegisterUrl"
-        )(request, messages(application)).toString
+        contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }
   }

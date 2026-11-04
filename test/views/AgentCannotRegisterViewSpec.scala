@@ -23,11 +23,7 @@ import views.html.AgentCannotRegisterView
 class AgentCannotRegisterViewSpec extends ViewTestHelpers {
 
   implicit val viewTest: ViewTest = new ViewTest {
-    override val page: Html          = inject[AgentCannotRegisterView].apply(
-      "agentServicesSignInUrl",
-      "usingAgentServicesUrl",
-      "checkNeedToRegisterUrl"
-    )
+    override val page: Html          = inject[AgentCannotRegisterView].apply()
     override val pageTitle: String   = "Agents cannot register for CBAM"
     override val pageHeading: String = "You cannot register for CBAM with this account"
   }
@@ -42,7 +38,7 @@ class AgentCannotRegisterViewSpec extends ViewTestHelpers {
     checkContentOnPage("After they’ve registered, you can manage their CBAM account by:", ".govuk-body:nth-of-type(3)")
     checkLinkOnPage(
       "signing in to agent services (opens in new tab)",
-      "agentServicesSignInUrl",
+      "https://www.gov.uk/guidance/sign-in-to-your-agent-services-account",
       ".govuk-list--bullet:nth-of-type(1) > li:nth-child(1) > a"
     )
     checkContentOnPage(
@@ -53,12 +49,12 @@ class AgentCannotRegisterViewSpec extends ViewTestHelpers {
     checkContentOnPage("Find out more about:", ".govuk-body:nth-of-type(4)")
     checkLinkOnPage(
       "using an agent services account (opens in new tab)",
-      "usingAgentServicesUrl",
+      "https://www.gov.uk/government/collections/hmrc-services-for-tax-agents",
       ".govuk-list--bullet:nth-of-type(2) > li:nth-child(1) > a"
     )
     checkLinkOnPage(
       "who must register for CBAM (opens in new tab)",
-      "checkNeedToRegisterUrl",
+      "https://www.gov.uk/government/collections/check-if-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam",
       ".govuk-list--bullet:nth-of-type(2) > li:nth-child(2) > a"
     )
 

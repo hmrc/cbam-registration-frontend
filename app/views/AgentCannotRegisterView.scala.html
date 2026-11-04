@@ -19,7 +19,7 @@
         link: components.Link
 )
 
-@(agentServicesSignInUrl: String, usingAgentServicesUrl: String, checkNeedToRegisterUrl: String)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("agentCannotRegister.title")), showBackLink = false) {
 
@@ -33,7 +33,7 @@
     <ul class="govuk-list govuk-list--bullet">
         <li>
         @link(
-            href = agentServicesSignInUrl,
+            href = "https://www.gov.uk/guidance/sign-in-to-your-agent-services-account",
             key = messages("agentCannotRegister.bullet1"),
             newTab = true
         )
@@ -45,14 +45,14 @@
     <ul class="govuk-list govuk-list--bullet">
         <li>
         @link(
-            href = usingAgentServicesUrl,
+            href = "https://www.gov.uk/government/collections/hmrc-services-for-tax-agents",
             key = messages("agentCannotRegister.bullet3"),
             newTab = true
         )
         </li>
         <li>
         @link(
-            href = checkNeedToRegisterUrl,
+            href = "https://www.gov.uk/government/collections/check-if-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam",
             key = messages("agentCannotRegister.bullet4"),
             newTab = true
         )

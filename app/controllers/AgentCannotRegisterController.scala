@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -25,7 +24,6 @@ import views.html.AgentCannotRegisterView
 import javax.inject.Inject
 
 class AgentCannotRegisterController @Inject() (
-    appConfig: FrontendAppConfig,
     override val messagesApi: MessagesApi,
     val controllerComponents: MessagesControllerComponents,
     view: AgentCannotRegisterView
@@ -33,6 +31,6 @@ class AgentCannotRegisterController @Inject() (
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = Action { implicit request =>
-    Ok(view(appConfig.agentServicesSignInUrl, appConfig.usingAgentServicesUrl, appConfig.checkNeedToRegisterUrl))
+    Ok(view())
   }
 }
