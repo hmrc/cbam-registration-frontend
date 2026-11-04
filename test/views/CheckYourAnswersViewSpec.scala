@@ -24,12 +24,15 @@ import views.html.CheckYourAnswersView
 
 class CheckYourAnswersViewSpec extends ViewTestHelpers {
 
-  val answers = SummaryList(Seq(
-    SummaryListRow(
-      Key(Text("Question?")),
-      Value(Text("Answer")),
-      actions = Some(Actions(items = Seq(ActionItem(content = Text("Change"))))))
-  ))
+  val answers = SummaryList(
+    Seq(
+      SummaryListRow(
+        Key(Text("Question?")),
+        Value(Text("Answer")),
+        actions = Some(Actions(items = Seq(ActionItem(content = Text("Change")))))
+      )
+    )
+  )
 
   implicit val viewTest: ViewTest = new ViewTest {
     override val page: Html          = inject[CheckYourAnswersView].apply(answers)
