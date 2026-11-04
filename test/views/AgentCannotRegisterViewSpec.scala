@@ -24,7 +24,7 @@ class AgentCannotRegisterViewSpec extends ViewTestHelpers {
 
   implicit val viewTest: ViewTest = new ViewTest {
     override val page: Html          = inject[AgentCannotRegisterView].apply()
-    override val pageTitle: String   = "Agents cannot register for CBAM"
+    override val pageTitle: String   = "You cannot register for CBAM with this account"
     override val pageHeading: String = "You cannot register for CBAM with this account"
   }
 
