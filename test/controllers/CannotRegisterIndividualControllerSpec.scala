@@ -36,7 +36,7 @@ class CannotRegisterIndividualControllerSpec extends SpecBase {
 
         val view = application.injector.instanceOf[CannotRegisterIndividualView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view()(request, messages(application)).toString
       }
     }

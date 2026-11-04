@@ -22,4 +22,4 @@ GET         /unauthorised                                controllers.Unauthorise
 
 GET         /agent                                       controllers.AgentCannotRegisterController.onPageLoad()
 GET         /already-registered                          controllers.AlreadyRegisteredController.onPageLoad()
-GET         /cannotRegisterIndividual                    controllers.CannotRegisterIndividualController.onPageLoad()
+GET         /individual                                  controllers.CannotRegisterIndividualController.onPageLoad()
