@@ -22,7 +22,7 @@ import views.html.ErrorTemplate
 
 class ErrorTemplateSpec extends ViewTestHelpers {
 
-  val exampleTitle = "Sorry there was a problem"
+  val exampleTitle   = "Sorry there was a problem"
   val exampleHeading = "Sorry again"
   val exampleMessage = "Sorry for the last time"
 

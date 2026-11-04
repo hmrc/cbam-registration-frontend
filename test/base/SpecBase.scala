@@ -19,10 +19,13 @@ package base
 import common.TestData
 import controllers.actions.*
 import models.{RichJsObject, UserAnswers}
+import org.mockito.Mockito.reset
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
+import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
@@ -30,6 +33,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.*
 import play.api.test.FakeRequest
 import queries.{Gettable, Settable}
+import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
@@ -37,21 +41,33 @@ import scala.util.{Failure, Success}
 
 trait SpecBase
     extends AnyFreeSpec
+    with GuiceOneAppPerSuite
     with Matchers
     with TryValues
     with OptionValues
     with ScalaFutures
+    with EitherValues
     with IntegrationPatience
+    with BeforeAndAfterEach
+    with MockitoSugar
     with TestData {
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+
+  final val mockSessionRepository: SessionRepository = mock[SessionRepository]
+
+  override def beforeEach(): Unit = {
+    reset(mockSessionRepository)
+    super.beforeEach()
+  }
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[SessionRepository].toInstance(mockSessionRepository)
       )
 
   implicit val hc: HeaderCarrier    = HeaderCarrier()

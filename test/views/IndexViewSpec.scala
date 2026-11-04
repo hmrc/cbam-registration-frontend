@@ -32,6 +32,9 @@ class IndexViewSpec extends ViewTestHelpers {
 
     checkTitle()
     checkHeading()
-    checkContentOnPage("Welcome to your new frontend. Please see the README file for a guide to getting started.", ".govuk-body")
+    checkContentOnPage(
+      "Welcome to your new frontend. Please see the README file for a guide to getting started.",
+      ".govuk-body"
+    )
   }
 }

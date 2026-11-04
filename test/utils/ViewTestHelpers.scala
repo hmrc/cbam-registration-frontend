@@ -35,11 +35,10 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
 
   val requestId: String = UUID.randomUUID().toString
 
-  private def normaliseAssetHref(href: String): String = {
+  private def normaliseAssetHref(href: String): String =
     if (href.contains("/assets/")) {
       href.replaceFirst("/[0-9a-f]{32}-([^/?#]+)(?=([?#].*)?$)", "/$1")
     } else href
-  }
 
   case class LinkCheck(expectedText: String, expectedHref: String) extends BeMatcher[(String, String)] {
     override def apply(left: (String, String)): MatchResult = {
@@ -49,12 +48,12 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
       val hrefsMatchAfterNormalising = normalisedActualHref == normalisedExpectedHref
 
       val errorMessage = left match {
-        case (`expectedText`, _) if hrefsMatchAfterNormalising => None
+        case (`expectedText`, _) if hrefsMatchAfterNormalising          => None
         case (`expectedText`, otherHref) if !hrefsMatchAfterNormalising =>
           Some(s"The href of '$otherHref' was not the same as the expected href of '$expectedHref'.")
-        case (otherText, `expectedHref`) if otherText != expectedText =>
+        case (otherText, `expectedHref`) if otherText != expectedText   =>
           Some(s"The text of '$otherText' was not the same as the expected text of '$expectedText'.")
-        case (otherText, otherHref) =>
+        case (otherText, otherHref)                                     =>
           Some(s"""Expected text: $expectedText
                   |Actual text:   $otherText
                   |============================
@@ -71,7 +70,7 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
   trait ViewTest {
     implicit lazy val baseFakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
     implicit lazy val mcc: Messages                                        = inject[MessagesApi].preferred(baseFakeRequest)
-    implicit lazy val appConfig: FrontendAppConfig = inject[FrontendAppConfig]
+    implicit lazy val appConfig: FrontendAppConfig                         = inject[FrontendAppConfig]
 
     val page: Html
     val pageTitle: String
@@ -95,7 +94,9 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkAttribute(attributeKey: String, expectedValue: String, selector: String)(implicit viewTest: ViewTest): Unit = {
+  def checkAttribute(attributeKey: String, expectedValue: String, selector: String)(implicit
+      viewTest: ViewTest
+  ): Unit = {
     lazy val attribute = viewTest.select(selector).attr(attributeKey)
 
     s"contain the attribute '$attributeKey' with value '$expectedValue' with the selector '$selector'" in {
@@ -107,19 +108,21 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     val content = viewTest.select(selector)
 
     val testNameLength = 40
-    val testNameText =
+    val testNameText   =
       if (expectedContent.length > testNameLength) expectedContent.take(testNameLength) + "..."
       else expectedContent
 
     s"contain the content '$testNameText' with the selector '$selector'" in {
-      if(content.isEmpty) fail(s"Could not find element with selector '$selector'.") else {
+      if (content.isEmpty) fail(s"Could not find element with selector '$selector'.")
+      else {
         content.text() shouldBe expectedContent
       }
     }
   }
 
-  def checkErrorSummary(error: String, summarySelector: String = ".govuk-error-summary", expectedErrorCount: Int = 1)
-                       (implicit viewTest: ViewTest): Unit = {
+  def checkErrorSummary(error: String, summarySelector: String = ".govuk-error-summary", expectedErrorCount: Int = 1)(
+      implicit viewTest: ViewTest
+  ): Unit = {
     lazy val errorSummary = viewTest.select(summarySelector)
 
     "the error summary" should {
@@ -137,8 +140,11 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkErrorMessageOnForm(error: String, errorSelector: String = ".govuk-error-message", expectedErrorCount: Int = 1)
-                             (implicit viewTest: ViewTest): Unit = {
+  def checkErrorMessageOnForm(
+      error: String,
+      errorSelector: String = ".govuk-error-message",
+      expectedErrorCount: Int = 1
+  )(implicit viewTest: ViewTest): Unit = {
     lazy val errorMessage = viewTest.select(errorSelector)
 
     "the field error" should {
@@ -152,8 +158,9 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkLinkOnPage(expectedLinkText: String, expectedLinkHref: String, selector: String)
-                     (implicit viewTest: ViewTest): Unit = {
+  def checkLinkOnPage(expectedLinkText: String, expectedLinkHref: String, selector: String)(implicit
+      viewTest: ViewTest
+  ): Unit = {
     lazy val linkElement = viewTest.select(selector)
     lazy val linkText    = linkElement.text()
     lazy val linkHref    = linkElement.attr("href")
@@ -166,8 +173,9 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkInputField(selector: String, expectedValue: Option[String] = None, placeholderText: Option[String] = None)
-                     (implicit viewTest: ViewTest): Unit = {
+  def checkInputField(selector: String, expectedValue: Option[String] = None, placeholderText: Option[String] = None)(
+      implicit viewTest: ViewTest
+  ): Unit = {
     lazy val inputElement = viewTest.select(selector)
 
     s"contain an input field with selector '$selector'" which {
@@ -190,10 +198,14 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkDropdownField(valueAndText: Seq[ListItem], selector: String, selectedValue: Option[String] = None, emptyOption: Option[String] = None)
-                        (implicit viewTest: ViewTest): Unit = {
-    lazy val dropdownField = viewTest.select(selector)
-    lazy val options = dropdownField.select("option")
+  def checkDropdownField(
+      valueAndText: Seq[ListItem],
+      selector: String,
+      selectedValue: Option[String] = None,
+      emptyOption: Option[String] = None
+  )(implicit viewTest: ViewTest): Unit = {
+    lazy val dropdownField     = viewTest.select(selector)
+    lazy val options           = dropdownField.select("option")
     lazy val totalOptions: Int = valueAndText.size + emptyOption.fold(0)(_ => 1)
 
     s"contain a dropdown with the selector '$selector'" which {
@@ -218,7 +230,7 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
         }
       }
 
-      valueAndText.zipWithIndex.foreach { case(item, index) =>
+      valueAndText.zipWithIndex.foreach { case (item, index) =>
         val offset = emptyOption.fold(0)(_ => 1)
 
         s"the option in position $index" should {
@@ -235,22 +247,26 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkCheckBoxes(items: Seq[ListItem], selector: String, allValuesSelected: Option[Boolean] = None,
-                      allValuesDisabled: Option[Boolean] = None)(implicit viewTest: ViewTest): Unit = {
+  def checkCheckBoxes(
+      items: Seq[ListItem],
+      selector: String,
+      allValuesSelected: Option[Boolean] = None,
+      allValuesDisabled: Option[Boolean] = None
+  )(implicit viewTest: ViewTest): Unit = {
     lazy val checkListOptions = viewTest.select(selector).select(".govuk-checkboxes__item")
 
     s"have a check list form with the selector '$selector'" which {
 
-      items.zipWithIndex.foreach { case(item, index) =>
+      items.zipWithIndex.foreach { case (item, index) =>
         s"has the item '${item.text}' with value '${item.value}'" in {
           val option = checkListOptions.get(index)
           option.select(".govuk-checkboxes__label").text() shouldBe item.text
-          option.select("input").`val`() shouldBe item.value
+          option.select("input").`val`()                   shouldBe item.value
         }
       }
 
       allValuesSelected.foreach { selected =>
-        if(selected) {
+        if (selected) {
           "all the boxes are checked" in {
             checkListOptions.select("[checked]").size() shouldBe items.size
           }
@@ -313,8 +329,9 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkRadioButton(content: String, selected: Boolean, selector: String, checkForAttribute: String = "selected")
-                      (implicit viewTest: ViewTest): Unit = {
+  def checkRadioButton(content: String, selected: Boolean, selector: String, checkForAttribute: String = "selected")(
+      implicit viewTest: ViewTest
+  ): Unit = {
     val elements    = viewTest.select(selector)
     val radioButton = elements.select("input[type=\"radio\"]")
     val label       = elements.select("label")
@@ -339,14 +356,15 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkDateForm(day: String, month: String, year: String, rootSelector: String = "date-input")
-                   (implicit viewTest: ViewTest): Unit = {
-    val dayForm = viewTest.select(s"#$rootSelector-day")
-    val dayLabel = viewTest.select(s"[for=$rootSelector-day]")
-    val monthForm = viewTest.select(s"#$rootSelector-month")
+  def checkDateForm(day: String, month: String, year: String, rootSelector: String = "date-input")(implicit
+      viewTest: ViewTest
+  ): Unit = {
+    val dayForm    = viewTest.select(s"#$rootSelector-day")
+    val dayLabel   = viewTest.select(s"[for=$rootSelector-day]")
+    val monthForm  = viewTest.select(s"#$rootSelector-month")
     val monthLabel = viewTest.select(s"[for=$rootSelector-month]")
-    val yearForm = viewTest.select(s"#$rootSelector-year")
-    val yearLabel = viewTest.select(s"[for=$rootSelector-year]")
+    val yearForm   = viewTest.select(s"#$rootSelector-year")
+    val yearLabel  = viewTest.select(s"[for=$rootSelector-year]")
 
     s"have a date form with the root selector of '$rootSelector'" which {
       case class PeriodTest(period: String, expectedValue: String, formField: Elements, label: Elements)
@@ -380,7 +398,7 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
 
   def checkListContents(listElements: Seq[String], selector: String)(implicit viewTest: ViewTest): Unit = {
     lazy val rootElement = viewTest.select(selector)
-    lazy val rootList = rootElement.first().children()
+    lazy val rootList    = rootElement.first().children()
 
     s"have a list with selector '$selector'" which {
 
@@ -388,24 +406,25 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
         rootList.size() shouldBe listElements.size
       }
 
-      listElements.zipWithIndex.foreach {
-        case (element, index) =>
-          s"contains a row with the text '$element' in position ${index + 1}" in {
-            if(rootElement.isEmpty) {
-              fail(s"Cannot find the element with the selector '$selector'.")
-            } else if(rootList.isEmpty) {
-              fail(s"Cannot find text '$element'. Element at index $index does not exist.")
-            } else {
-              rootList.get(index).text shouldBe element
-            }
+      listElements.zipWithIndex.foreach { case (element, index) =>
+        s"contains a row with the text '$element' in position ${index + 1}" in {
+          if (rootElement.isEmpty) {
+            fail(s"Cannot find the element with the selector '$selector'.")
+          } else if (rootList.isEmpty) {
+            fail(s"Cannot find text '$element'. Element at index $index does not exist.")
+          } else {
+            rootList.get(index).text shouldBe element
           }
+        }
       }
     }
   }
 
   case class TableRowTest(text: String*)
 
-  def checkTable(headings: Seq[String], rows: Seq[TableRowTest], selector: String)(implicit viewTest: ViewTest): Unit = {
+  def checkTable(headings: Seq[String], rows: Seq[TableRowTest], selector: String)(implicit
+      viewTest: ViewTest
+  ): Unit = {
     lazy val tableElement = viewTest.select(selector).first()
     lazy val tableHeaders = tableElement.select("thead > tr").first().children()
     lazy val tableRows    = tableElement.select("tbody").first().children()
@@ -417,11 +436,10 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
       }
 
       "has the following headers" which {
-        headings.zipWithIndex.foreach {
-          case (heading, index) =>
-            s"'$heading' in position ${index + 1}" in {
-              tableHeaders.get(index).text() shouldBe heading
-            }
+        headings.zipWithIndex.foreach { case (heading, index) =>
+          s"'$heading' in position ${index + 1}" in {
+            tableHeaders.get(index).text() shouldBe heading
+          }
         }
       }
 
@@ -432,28 +450,26 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
       "has rows with the correct content" which {
         lazy val allRowsIndexed = rows.zipWithIndex
 
-        allRowsIndexed.foreach {
-          case (row, index) =>
-            s"row ${index + 1}" should {
+        allRowsIndexed.foreach { case (row, index) =>
+          s"row ${index + 1}" should {
 
-              s"have ${row.text.size} columns" in {
-                tableRows.get(index).children().size() shouldBe row.text.size
-              }
+            s"have ${row.text.size} columns" in {
+              tableRows.get(index).children().size() shouldBe row.text.size
+            }
 
-              "have the following content in each column" which {
-                lazy val rowColumnsIndexed = row.text.zipWithIndex
+            "have the following content in each column" which {
+              lazy val rowColumnsIndexed = row.text.zipWithIndex
 
-                rowColumnsIndexed.foreach {
-                  case (columnText, columnIndex) =>
-                    s"has '$columnText' in position ${columnIndex + 1}" in {
-                      val htmlRow    = tableRows.get(index).children()
-                      val htmlColumn = htmlRow.get(columnIndex)
+              rowColumnsIndexed.foreach { case (columnText, columnIndex) =>
+                s"has '$columnText' in position ${columnIndex + 1}" in {
+                  val htmlRow    = tableRows.get(index).children()
+                  val htmlColumn = htmlRow.get(columnIndex)
 
-                      htmlColumn.text() shouldBe columnText
-                    }
+                  htmlColumn.text() shouldBe columnText
                 }
               }
             }
+          }
         }
       }
     }
