@@ -45,6 +45,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/cbam-registration-frontend?useServiceNavigation"
 
   val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
+  val returnsServiceAvailable: Boolean    = configuration.get[Boolean]("features.returns-available")
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),

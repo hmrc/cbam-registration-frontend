@@ -48,7 +48,7 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-agentCannotRegister.title = Agents cannot register for CBAM
+agentCannotRegister.title = You cannot register for CBAM with this account
 agentCannotRegister.heading = You cannot register for CBAM with this account
 agentCannotRegister.p1 = You signed in with an agent services account.
 agentCannotRegister.p2 = Your client must register for CBAM using their own account.
@@ -58,3 +58,8 @@ agentCannotRegister.bullet2 = requesting authorisation to manage your client's C
 agentCannotRegister.p4 = Find out more about:
 agentCannotRegister.bullet3 = using an agent services account (opens in new tab)
 agentCannotRegister.bullet4 = who must register for CBAM (opens in new tab)
+
+alreadyRegistered.title = Your organisation is already registered for CBAM
+alreadyRegistered.heading = Your organisation is already registered for CBAM
+alreadyRegistered.p = You can manage your CBAM obligations in your CBAM account.
+alreadyRegistered.button = Go to CBAM account
