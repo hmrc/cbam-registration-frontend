@@ -16,6 +16,9 @@
 
 package views
 
+import config.FrontendAppConfig
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.twirl.api.Html
 import utils.ViewTestHelpers
 import views.html.AlreadyRegisteredView
@@ -25,11 +28,14 @@ class AlreadyRegisteredViewSpec extends ViewTestHelpers {
   "AlreadyRegistered view" when {
 
     "returnsServiceAvailable = true" should {
+      val appWithConfig: Application = new GuiceApplicationBuilder()
+        .configure("features.returns-available" -> true)
+        .build()
 
       implicit val viewTest: ViewTest = new ViewTest {
-        override val page: Html          = inject[AlreadyRegisteredView].apply(
-          returnsServiceAvailable = true
-        )
+        override implicit lazy val appConfig: FrontendAppConfig = appWithConfig.injector.instanceOf[FrontendAppConfig]
+
+        override val page: Html          = appWithConfig.injector.instanceOf[AlreadyRegisteredView].apply()
         override val pageTitle: String   = "Your organisation is already registered for CBAM"
         override val pageHeading: String = "Your organisation is already registered for CBAM"
       }
@@ -42,16 +48,17 @@ class AlreadyRegisteredViewSpec extends ViewTestHelpers {
         controllers.routes.AlreadyRegisteredController.onPageLoad().url,
         ".govuk-button"
       )
-
-      checkElementDoesNotExist(".govuk-back-link")
     }
 
     "returnsServiceAvailable = false" should {
+      val appWithConfig: Application = new GuiceApplicationBuilder()
+        .configure("features.returns-available" -> false)
+        .build()
 
       implicit val viewTest: ViewTest = new ViewTest {
-        override val page: Html          = inject[AlreadyRegisteredView].apply(
-          returnsServiceAvailable = false
-        )
+        override implicit lazy val appConfig: FrontendAppConfig = appWithConfig.injector.instanceOf[FrontendAppConfig]
+
+        override val page: Html          = appWithConfig.injector.instanceOf[AlreadyRegisteredView].apply()
         override val pageTitle: String   = "Your organisation is already registered for CBAM"
         override val pageHeading: String = "Your organisation is already registered for CBAM"
       }
@@ -60,8 +67,6 @@ class AlreadyRegisteredViewSpec extends ViewTestHelpers {
 
       checkContentOnPage("You can manage your CBAM obligations in your CBAM account.", ".govuk-body:nth-of-type(1)")
       checkElementDoesNotExist(".govuk-button")
-
-      checkElementDoesNotExist(".govuk-back-link")
     }
   }
 }

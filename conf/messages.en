@@ -59,11 +59,6 @@ agentCannotRegister.p4 = Find out more about:
 agentCannotRegister.bullet3 = using an agent services account (opens in new tab)
 agentCannotRegister.bullet4 = who must register for CBAM (opens in new tab)
 
-alreadyRegistered.title = Your organisation is already registered for CBAM
-alreadyRegistered.heading = Your organisation is already registered for CBAM
-alreadyRegistered.p = You can manage your CBAM obligations in your CBAM account.
-alreadyRegistered.button = Go to CBAM account
-
 cannotRegisterIndividual.title = You cannot register for CBAM with an individual account
 cannotRegisterIndividual.heading = You cannot register for CBAM with an individual account
 cannotRegisterIndividual.p1 = You’ve signed in with an individual account.
@@ -74,3 +69,8 @@ assistantCannotRegister.title = You must be an administrator to register for CBA
 assistantCannotRegister.heading = You must be an administrator to register for CBAM
 assistantCannotRegister.p1 = You’re signed in with an organisation account that does not have administrator access. Only an administrator can register your organisation for CBAM.
 assistantCannotRegister.p2 = Ask your organisation’s administrator to register for CBAM or give you administrator access so you can register.
+
+alreadyRegistered.title = Your organisation is already registered for CBAM
+alreadyRegistered.heading = Your organisation is already registered for CBAM
+alreadyRegistered.p = You can manage your CBAM obligations in your CBAM account.
+alreadyRegistered.button = Go to CBAM account

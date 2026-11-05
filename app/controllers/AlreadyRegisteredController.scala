@@ -25,14 +25,14 @@ import views.html.AlreadyRegisteredView
 import javax.inject.Inject
 
 class AlreadyRegisteredController @Inject() (
-    appConfig: FrontendAppConfig,
     override val messagesApi: MessagesApi,
     val controllerComponents: MessagesControllerComponents,
     view: AlreadyRegisteredView
-) extends FrontendBaseController
+)(implicit appConfig: FrontendAppConfig)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = Action { implicit request =>
-    Ok(view(appConfig.returnsServiceAvailable))
+    Ok(view())
   }
 }
