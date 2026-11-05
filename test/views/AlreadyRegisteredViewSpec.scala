@@ -23,7 +23,9 @@ import views.html.AlreadyRegisteredView
 class AlreadyRegisteredViewSpec extends ViewTestHelpers {
 
   "AlreadyRegistered view" when {
+    
     "returnsServiceAvailable = true" should {
+      
       implicit val viewTest: ViewTest = new ViewTest {
         override val page: Html          = inject[AlreadyRegisteredView].apply(
           returnsServiceAvailable = true
@@ -32,8 +34,7 @@ class AlreadyRegisteredViewSpec extends ViewTestHelpers {
         override val pageHeading: String = "Your organisation is already registered for CBAM"
       }
 
-      checkTitle()
-      checkHeading()
+      basicChecks(hasBackLink = false)
 
       checkContentOnPage("You can manage your CBAM obligations in your CBAM account.", ".govuk-body:nth-of-type(1)")
       checkLinkOnPage(
@@ -46,6 +47,7 @@ class AlreadyRegisteredViewSpec extends ViewTestHelpers {
     }
 
     "returnsServiceAvailable = false" should {
+      
       implicit val viewTest: ViewTest = new ViewTest {
         override val page: Html          = inject[AlreadyRegisteredView].apply(
           returnsServiceAvailable = false
@@ -54,8 +56,7 @@ class AlreadyRegisteredViewSpec extends ViewTestHelpers {
         override val pageHeading: String = "Your organisation is already registered for CBAM"
       }
 
-      checkTitle()
-      checkHeading()
+      basicChecks(hasBackLink = false)
 
       checkContentOnPage("You can manage your CBAM obligations in your CBAM account.", ".govuk-body:nth-of-type(1)")
       checkElementDoesNotExist(".govuk-button")
