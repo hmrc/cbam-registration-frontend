@@ -23,9 +23,9 @@ import views.html.AlreadyRegisteredView
 class AlreadyRegisteredViewSpec extends ViewTestHelpers {
 
   "AlreadyRegistered view" when {
-    
+
     "returnsServiceAvailable = true" should {
-      
+
       implicit val viewTest: ViewTest = new ViewTest {
         override val page: Html          = inject[AlreadyRegisteredView].apply(
           returnsServiceAvailable = true
@@ -47,7 +47,7 @@ class AlreadyRegisteredViewSpec extends ViewTestHelpers {
     }
 
     "returnsServiceAvailable = false" should {
-      
+
       implicit val viewTest: ViewTest = new ViewTest {
         override val page: Html          = inject[AlreadyRegisteredView].apply(
           returnsServiceAvailable = false
