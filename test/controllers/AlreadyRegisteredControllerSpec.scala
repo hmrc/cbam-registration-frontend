@@ -18,62 +18,28 @@ package controllers
 
 import base.SpecBase
 import config.FrontendAppConfig
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.AlreadyRegisteredView
 
 class AlreadyRegisteredControllerSpec extends SpecBase {
 
-  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-
   "AlreadyRegistered Controller" - {
 
-    "must return OK and the correct view for a GET" - {
-      "when returns-available is true in config" in {
-        when(mockAppConfig.returnsServiceAvailable).thenReturn(true)
-        when(mockAppConfig.feedbackUrl(any())).thenReturn("feedbackUrl")
+    "must return OK and the correct view for a GET" in {
 
-        val application = applicationBuilder(userAnswers = None)
-          .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
-          .build()
+      val application = applicationBuilder(userAnswers = None).build()
 
-        running(application) {
-          val request = FakeRequest(GET, routes.AlreadyRegisteredController.onPageLoad().url)
+      running(application) {
+        val request = FakeRequest(GET, routes.AlreadyRegisteredController.onPageLoad().url)
 
-          val result = route(application, request).value
+        val result = route(application, request).value
 
-          val view = application.injector.instanceOf[AlreadyRegisteredView]
+        val view      = application.injector.instanceOf[AlreadyRegisteredView]
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
-          status(result)          mustEqual OK
-          contentAsString(result) mustEqual view(
-            returnsServiceAvailable = true
-          )(request, messages(application)).toString
-        }
-      }
-
-      "when returns-available is false in config" in {
-        when(mockAppConfig.returnsServiceAvailable).thenReturn(false)
-        when(mockAppConfig.feedbackUrl(any())).thenReturn("feedbackUrl")
-
-        val application = applicationBuilder(userAnswers = None)
-          .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
-          .build()
-
-        running(application) {
-          val request = FakeRequest(GET, routes.AlreadyRegisteredController.onPageLoad().url)
-
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[AlreadyRegisteredView]
-
-          status(result)          mustEqual OK
-          contentAsString(result) mustEqual view(
-            returnsServiceAvailable = false
-          )(request, messages(application)).toString
-        }
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view()(request, messages(application), appConfig).toString
       }
     }
   }

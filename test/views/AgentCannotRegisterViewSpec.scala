@@ -56,7 +56,5 @@ class AgentCannotRegisterViewSpec extends ViewTestHelpers {
       "https://www.gov.uk/government/collections/check-if-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam",
       ".govuk-list--bullet:nth-of-type(2) > li:nth-child(2) > a"
     )
-
-    checkElementDoesNotExist(".govuk-back-link")
   }
 }

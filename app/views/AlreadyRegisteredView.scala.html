@@ -14,12 +14,14 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton
 )
 
-@(returnsServiceAvailable: Boolean)(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
 @layout(pageTitle = titleNoForm(messages("alreadyRegistered.title")), showBackLink = false) {
 
@@ -27,7 +29,7 @@
 
     <p class="govuk-body">@messages("alreadyRegistered.p")</p>
 
-    @if(returnsServiceAvailable) {
+    @if(appConfig.returnsServiceAvailable) {
         @govukButton(
             ButtonViewModel(messages("alreadyRegistered.button"))
             .asLink(controllers.routes.AlreadyRegisteredController.onPageLoad().url)

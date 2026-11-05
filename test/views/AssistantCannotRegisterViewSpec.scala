@@ -30,8 +30,7 @@ class AssistantCannotRegisterViewSpec extends ViewTestHelpers {
 
   "AssistantCannotRegister view" should {
 
-    checkTitle()
-    checkHeading()
+    basicChecks(hasBackLink = false)
     checkContentOnPage(
       "You’re signed in with an organisation account that does not have administrator access. " +
         "Only an administrator can register your organisation for CBAM.",
@@ -41,6 +40,5 @@ class AssistantCannotRegisterViewSpec extends ViewTestHelpers {
       "Ask your organisation’s administrator to register for CBAM or give you administrator access so you can register.",
       ".govuk-body:nth-of-type(2)"
     )
-    checkElementDoesNotExist(".govuk-back-link")
   }
 }
