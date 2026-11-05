@@ -69,3 +69,8 @@ cannotRegisterIndividual.heading = You cannot register for CBAM with an individu
 cannotRegisterIndividual.p1 = You’ve signed in with an individual account.
 cannotRegisterIndividual.p2 = To register your organisation for CBAM, sign in using your organisation’s account details.
 cannotRegisterIndividual.link = Find out who must register for CBAM (opens in new tab)
+
+assistantCannotRegister.title = You must be an administrator to register for CBAM
+assistantCannotRegister.heading = You must be an administrator to register for CBAM
+assistantCannotRegister.p1 = You’re signed in with an organisation account that does not have administrator access. Only an administrator can register your organisation for CBAM.
+assistantCannotRegister.p2 = Ask your organisation’s administrator to register for CBAM or give you administrator access so you can register.
