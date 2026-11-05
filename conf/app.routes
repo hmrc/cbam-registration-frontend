@@ -25,4 +25,4 @@ GET         /agent                                       controllers.AgentCannot
 GET         /already-registered                          controllers.AlreadyRegisteredController.onPageLoad()
 GET         /individual                                  controllers.CannotRegisterIndividualController.onPageLoad()
 
-GET         /admin                                       controllers.AssistantCannotRegisterController.onPageLoad()
+GET         /non-admin                                   controllers.AssistantCannotRegisterController.onPageLoad()

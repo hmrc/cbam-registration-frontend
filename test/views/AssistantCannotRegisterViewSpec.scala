@@ -34,7 +34,7 @@ class AssistantCannotRegisterViewSpec extends ViewTestHelpers {
     checkHeading()
     checkContentOnPage(
       "You’re signed in with an organisation account that does not have administrator access. " +
-      "Only an administrator can register your organisation for CBAM.",
+        "Only an administrator can register your organisation for CBAM.",
       ".govuk-body:nth-of-type(1)"
     )
     checkContentOnPage(
@@ -44,4 +44,3 @@ class AssistantCannotRegisterViewSpec extends ViewTestHelpers {
     checkElementDoesNotExist(".govuk-back-link")
   }
 }
-
