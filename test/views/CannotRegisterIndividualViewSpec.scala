@@ -24,13 +24,13 @@ class CannotRegisterIndividualViewSpec extends ViewTestHelpers {
 
   implicit lazy val viewTest: ViewTest = new ViewTest {
     override val page: Html          = inject[CannotRegisterIndividualView].apply()
-    override val pageTitle: String   = "Individuals cannot register for CBAM with this account"
-    override val pageHeading: String = "Individuals cannot register for CBAM with this account"
+    override val pageTitle: String   = "You cannot register for CBAM with an individual account"
+    override val pageHeading: String = "You cannot register for CBAM with an individual account"
   }
 
   "CannotRegisterIndividualView" should {
-    checkTitle()
-    checkHeading()
+    basicChecks(false)
+
     checkContentOnPage(
       "You’ve signed in with an individual account.",
       "#main-content > div > div > p:nth-child(2)"

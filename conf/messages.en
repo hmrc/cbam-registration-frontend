@@ -64,8 +64,8 @@ alreadyRegistered.heading = Your organisation is already registered for CBAM
 alreadyRegistered.p = You can manage your CBAM obligations in your CBAM account.
 alreadyRegistered.button = Go to CBAM account
 
-cannotRegisterIndividual.title = Individuals cannot register for CBAM with this account
-cannotRegisterIndividual.heading = Individuals cannot register for CBAM with this account
+cannotRegisterIndividual.title = You cannot register for CBAM with an individual account
+cannotRegisterIndividual.heading = You cannot register for CBAM with an individual account
 cannotRegisterIndividual.p1 = You’ve signed in with an individual account.
 cannotRegisterIndividual.p2 = To register your organisation for CBAM, sign in using your organisation’s account details.
 cannotRegisterIndividual.link = Find out who must register for CBAM (opens in new tab)

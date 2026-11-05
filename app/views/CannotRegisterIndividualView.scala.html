@@ -16,19 +16,22 @@
 
 @this(
         layout: templates.Layout,
+        link: components.Link,
         govukButton: GovukButton
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("cannotRegisterIndividual.title"))) {
+@layout(pageTitle = titleNoForm(messages("cannotRegisterIndividual.title")), showBackLink = false) {
 
     <h1 class="govuk-heading-l">@messages("cannotRegisterIndividual.heading")</h1>
     <p class="govuk-body">@messages("cannotRegisterIndividual.p1")</p>
     <p class="govuk-body">@messages("cannotRegisterIndividual.p2")</p>
     <p class="govuk-body">
-     <a class="govuk-link" target="_blank" lang="en" hreflang="en" rel="noreferrer noopener" href="https://www.gov.uk/government/collections/check-if-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam">
-      @messages("cannotRegisterIndividual.link")
-     </a>
+     @link(
+         "https://www.gov.uk/government/collections/check-if-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam",
+         key = "cannotRegisterIndividual.link",
+         newTab = true
+     )
     </p>
 }

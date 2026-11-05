@@ -81,6 +81,12 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     def select(selector: String): Elements = doc.select(selector)
   }
 
+  def basicChecks(hasBackLink: Boolean = true)(implicit viewTest: ViewTest): Unit = {
+    checkTitle()
+    checkHeading()
+    checkBackLink(hasBackLink)
+  }
+
   def checkTitle()(implicit viewTest: ViewTest): Unit =
     s"have the title of '${viewTest.pageTitle}'" in {
       viewTest.doc.title() shouldBe s"${viewTest.pageTitle} - Register for CBAM - GOV.UK"
@@ -309,7 +315,7 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     val element = viewTest.select(selector)
 
     s"have an element with the selector '$selector'" in {
-      element.size() should not be 0
+      assert(element.size() != 0, s"The element with selector '$selector' does not exist on the page.")
     }
   }
 
@@ -317,7 +323,7 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     val element = viewTest.select(selector)
 
     s"not have an element with the selector '$selector'" in {
-      element.size() shouldBe 0
+      assert(element.size() == 0, s"The element with selector '$selector' exists on the page.")
     }
   }
 
@@ -474,4 +480,16 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
       }
     }
   }
+
+  def checkBackLink(exists: Boolean)(implicit viewTest: ViewTest): Unit =
+    if (exists) {
+      "page contains a back link" should {
+        checkElementExists(".govuk-back-link")
+      }
+    } else {
+      "page does not contain a back link" should {
+        checkElementDoesNotExist(".govuk-back-link")
+      }
+    }
+
 }
