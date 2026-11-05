@@ -29,8 +29,7 @@ class AgentCannotRegisterViewSpec extends ViewTestHelpers {
   }
 
   "AgentCannotRegister view" should {
-    checkTitle()
-    checkHeading()
+    basicChecks(hasBackLink = false)
 
     checkContentOnPage("You signed in with an agent services account.", ".govuk-body:nth-of-type(1)")
     checkContentOnPage("Your client must register for CBAM using their own account.", ".govuk-body:nth-of-type(2)")

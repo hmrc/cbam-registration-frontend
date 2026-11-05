@@ -29,7 +29,7 @@ class CannotRegisterIndividualViewSpec extends ViewTestHelpers {
   }
 
   "CannotRegisterIndividualView" should {
-    basicChecks(false)
+    basicChecks(hasBackLink = false)
 
     checkContentOnPage(
       "You’ve signed in with an individual account.",
