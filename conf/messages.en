@@ -10,6 +10,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.saveAndComeBackLater = Save and come back later
 
 date.day = Day
 date.month = Month
@@ -74,3 +75,12 @@ alreadyRegistered.title = Your organisation is already registered for CBAM
 alreadyRegistered.heading = Your organisation is already registered for CBAM
 alreadyRegistered.p = You can manage your CBAM obligations in your CBAM account.
 alreadyRegistered.button = Go to CBAM account
+
+liabilityIntroduction.title = We need to work out the date your liability for CBAM started
+liabilityIntroduction.heading = We need to work out the date your liability for CBAM started
+liabilityIntroduction.p1 = We’ll ask you a few questions to work out when you became liable to register.
+liabilityIntroduction.p2 = Your liability to register for CBAM starts on one of these dates:
+liabilityIntroduction.bullet1 = when you first expected to import CBAM goods worth £50,000 or more into the UK in the next 30 days
+liabilityIntroduction.bullet2 = when you imported CBAM goods worth £50,000 or more into the UK in the past 12 months, as assessed on the first day of each month
+liabilityIntroduction.p3 = If both scenarios apply, your liability to register for CBAM starts on the earlier date.
+liabilityIntroduction.linkText = Find out more about when liability to register for CBAM starts (opens in new tab)
