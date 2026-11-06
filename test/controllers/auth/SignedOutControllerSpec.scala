@@ -23,9 +23,9 @@ import views.html.auth.SignedOutView
 
 class SignedOutControllerSpec extends SpecBase {
 
-  "SignedOut Controller" - {
+  "SignedOut Controller" must {
 
-    "must return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 

@@ -23,9 +23,9 @@ import views.html.AssistantCannotRegisterView
 
 class AssistantCannotRegisterControllerSpec extends SpecBase {
 
-  "AssistantCannotRegister Controller" - {
+  "AssistantCannotRegister Controller" must {
 
-    "must return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

@@ -7,7 +7,7 @@ class $className$FormProviderSpec extends StringFieldBehaviours {
 
   val form = new $className$FormProvider()()
 
-  ".$field1Name$" - {
+  ".$field1Name$" must {
 
     val fieldName = "$field1Name$"
     val requiredKey = "$className;format="decap"$.error.$field1Name$.required"
@@ -34,7 +34,7 @@ class $className$FormProviderSpec extends StringFieldBehaviours {
     )
   }
 
-  ".$field2Name$" - {
+  ".$field2Name$" must {
 
     val fieldName = "$field2Name$"
     val requiredKey = "$className;format="decap"$.error.$field2Name$.required"

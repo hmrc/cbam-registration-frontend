@@ -7,7 +7,7 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
 
   val form = new $className$FormProvider()()
 
-  ".value" - {
+  ".value" must {
 
     val fieldName = "value"
 

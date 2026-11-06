@@ -18,8 +18,8 @@ package viewmodels.govuk
 
 import forms.mappings.Mappings
 import org.scalatest.OptionValues
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
@@ -27,9 +27,9 @@ import viewmodels.govuk.all._
 
 import java.time.LocalDate
 
-class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with OptionValues {
+class DateFluencySpec extends AnyWordSpec with Matchers with Mappings with OptionValues {
 
-  ".apply" - {
+  ".apply" must {
 
     implicit val messages: Messages = stubMessages()
 
@@ -47,7 +47,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
 
     val errorClass = "govuk-input--error"
 
-    "must highlight all fields when there is an error, but the error does not specify any individual day/month/year field" in {
+    "highlight all fields when there is an error, but the error does not specify any individual day/month/year field" in {
 
       val boundForm = form.bind(Map.empty[String, String])
 
@@ -56,7 +56,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
       result.items.forall(_.classes.contains(errorClass)) mustEqual true
     }
 
-    "must highlight the day field when the error is that a day is missing" in {
+    "highlight the day field when the error is that a day is missing" in {
 
       val boundForm = form.bind(
         Map(
@@ -72,7 +72,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
       result.items.find(_.id == "value.year").value.classes  must not include errorClass
     }
 
-    "must highlight the day and month fields when the error is that a day and month are both missing" in {
+    "highlight the day and month fields when the error is that a day and month are both missing" in {
 
       val boundForm = form.bind(
         Map(
@@ -87,7 +87,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
       result.items.find(_.id == "value.year").value.classes  must not include errorClass
     }
 
-    "must highlight the day and year fields when the error is that a day and year are both missing" in {
+    "highlight the day and year fields when the error is that a day and year are both missing" in {
 
       val boundForm = form.bind(
         Map(
@@ -102,7 +102,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
       result.items.find(_.id == "value.year").value.classes  must include(errorClass)
     }
 
-    "must highlight the month field when the error is that a month is missing" in {
+    "highlight the month field when the error is that a month is missing" in {
 
       val boundForm = form.bind(
         Map(
@@ -118,7 +118,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
       result.items.find(_.id == "value.year").value.classes  must not include errorClass
     }
 
-    "must highlight the month and year fields when the error is that a month and year are both missing" in {
+    "highlight the month and year fields when the error is that a month and year are both missing" in {
 
       val boundForm = form.bind(
         Map(
@@ -133,7 +133,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
       result.items.find(_.id == "value.year").value.classes  must include(errorClass)
     }
 
-    "must highlight the year field when the error is that a year is missing" in {
+    "highlight the year field when the error is that a year is missing" in {
 
       val boundForm = form.bind(
         Map(
@@ -149,7 +149,7 @@ class DateFluencySpec extends AnyFreeSpec with Matchers with Mappings with Optio
       result.items.find(_.id == "value.year").value.classes  must include(errorClass)
     }
 
-    "must not highlight any fields when there is not an error" in {
+    "not highlight any fields when there is not an error" in {
 
       val boundForm = form.bind(
         Map(

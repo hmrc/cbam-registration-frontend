@@ -24,9 +24,9 @@ import views.html.AlreadyRegisteredView
 
 class AlreadyRegisteredControllerSpec extends SpecBase {
 
-  "AlreadyRegistered Controller" - {
+  "AlreadyRegistered Controller" must {
 
-    "must return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 

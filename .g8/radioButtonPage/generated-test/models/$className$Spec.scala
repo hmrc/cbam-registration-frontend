@@ -3,16 +3,16 @@ package models
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.OptionValues
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsError, JsString, Json}
 
-class $className$Spec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class $className$Spec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
-  "$className$" - {
+  "$className$" must {
 
-    "must deserialise valid values" in {
+    "deserialise valid values" in {
 
       val gen = Gen.oneOf($className$.values.toSeq)
 
@@ -23,7 +23,7 @@ class $className$Spec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
       }
     }
 
-    "must fail to deserialise invalid values" in {
+    "fail to deserialise invalid values" in {
 
       val gen = arbitrary[String] suchThat (!$className$.values.map(_.toString).contains(_))
 
@@ -34,7 +34,7 @@ class $className$Spec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
       }
     }
 
-    "must serialise" in {
+    "serialise" in {
 
       val gen = Gen.oneOf($className$.values.toSeq)
 

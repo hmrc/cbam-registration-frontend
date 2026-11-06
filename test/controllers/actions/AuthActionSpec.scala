@@ -36,11 +36,11 @@ class AuthActionSpec extends SpecBase {
     def onPageLoad(): Action[AnyContent] = authAction(_ => Results.Ok)
   }
 
-  "Auth Action" - {
+  "Auth Action" when {
 
-    "when the user hasn't logged in" - {
+    "the user hasn't logged in" must {
 
-      "must redirect the user to log in " in {
+      "redirect the user to log in " in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -62,9 +62,9 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
-    "the user's session has expired" - {
+    "the user's session has expired" must {
 
-      "must redirect the user to log in " in {
+      "redirect the user to log in " in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -86,9 +86,9 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
-    "the user doesn't have sufficient enrolments" - {
+    "the user doesn't have sufficient enrolments" must {
 
-      "must redirect the user to the unauthorised page" in {
+      "redirect the user to the unauthorised page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -110,9 +110,9 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
-    "the user doesn't have sufficient confidence level" - {
+    "the user doesn't have sufficient confidence level" must {
 
-      "must redirect the user to the unauthorised page" in {
+      "redirect the user to the unauthorised page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -134,9 +134,9 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
-    "the user used an unaccepted auth provider" - {
+    "the user used an unaccepted auth provider" must {
 
-      "must redirect the user to the unauthorised page" in {
+      "redirect the user to the unauthorised page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -158,9 +158,9 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
-    "the user has an unsupported affinity group" - {
+    "the user has an unsupported affinity group" must {
 
-      "must redirect the user to the unauthorised page" in {
+      "redirect the user to the unauthorised page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -182,9 +182,9 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
-    "the user has an unsupported credential role" - {
+    "the user has an unsupported credential role" must {
 
-      "must redirect the user to the unauthorised page" in {
+      "redirect the user to the unauthorised page" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
