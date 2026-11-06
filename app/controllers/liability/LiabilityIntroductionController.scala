@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.liability
 
-import controllers.actions.IdentifierAction
-import javax.inject.Inject
-import play.api.i18n.I18nSupport
+import controllers.actions.*
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IndexView
+import views.html.liability.LiabilityIntroductionView
 
-class IndexController @Inject() (
-    val controllerComponents: MessagesControllerComponents,
+import javax.inject.Inject
+
+class LiabilityIntroductionController @Inject() (
+    override val messagesApi: MessagesApi,
     identify: IdentifierAction,
-    view: IndexView
+    getData: DataRetrievalAction,
+    requireData: DataRequiredAction,
+    val controllerComponents: MessagesControllerComponents,
+    view: LiabilityIntroductionView
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = identify { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     Ok(view())
   }
 }

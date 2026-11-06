@@ -34,6 +34,6 @@ class SignedOutViewSpec extends ViewTestHelpers {
     checkTitle()
     checkHeading()
     checkContentOnPage("We did not save your answers.", ".govuk-body:nth-of-type(1)")
-    checkLinkOnPage("Sign in", routes.IndexController.onPageLoad().url, ".govuk-button")
+    checkLinkOnPage("Sign in", routes.ServiceEntryController.onPageLoad().url, ".govuk-button")
   }
 }
