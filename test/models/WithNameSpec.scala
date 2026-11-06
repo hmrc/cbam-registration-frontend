@@ -16,16 +16,16 @@
 
 package models
 
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class WithNameSpec extends AnyFreeSpec with Matchers {
+class WithNameSpec extends AnyWordSpec with Matchers {
 
   object Foo extends WithName("bar")
 
-  ".toString" - {
+  ".toString" must {
 
-    "must return the correct string" in {
+    "return the correct string" in {
       Foo.toString mustEqual "bar"
     }
   }

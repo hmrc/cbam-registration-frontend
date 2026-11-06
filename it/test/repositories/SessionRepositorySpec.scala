@@ -23,8 +23,8 @@ import org.mongodb.scala.model.Filters
 import org.scalactic.source.Position
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import org.slf4j.MDC
 import uk.gov.hmrc.mdc.MdcExecutionContext
@@ -33,10 +33,10 @@ import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutorService, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 class SessionRepositorySpec
-    extends AnyFreeSpec
+    extends AnyWordSpec
     with Matchers
     with DefaultPlayMongoRepositorySupport[UserAnswers]
     with ScalaFutures
@@ -60,9 +60,9 @@ class SessionRepositorySpec
     clock = stubClock
   )
 
-  ".set" - {
+  ".set" must {
 
-    "must set the last updated time on the supplied user answers to `now`, and save them" in {
+    "set the last updated time on the supplied user answers to `now`, and save them" in {
 
       val expectedResult = userAnswers copy (lastUpdated = instant)
 
@@ -75,11 +75,11 @@ class SessionRepositorySpec
     mustPreserveMdc(repository.set(userAnswers))
   }
 
-  ".get" - {
+  ".get" when {
 
-    "when there is a record for this id" - {
+    "there is a record for this id" must {
 
-      "must update the lastUpdated time and get the record" in {
+      "update the lastUpdated time and get the record" in {
 
         insert(userAnswers).futureValue
 
@@ -90,9 +90,9 @@ class SessionRepositorySpec
       }
     }
 
-    "when there is no record for this id" - {
+    "there is no record for this id" must {
 
-      "must return None" in {
+      "return None" in {
 
         repository.get("id that does not exist").futureValue must not be defined
       }
@@ -101,9 +101,9 @@ class SessionRepositorySpec
     mustPreserveMdc(repository.get(userAnswers.id))
   }
 
-  ".clear" - {
+  ".clear" must {
 
-    "must remove a record" in {
+    "remove a record" in {
 
       insert(userAnswers).futureValue
 
@@ -112,7 +112,7 @@ class SessionRepositorySpec
       repository.get(userAnswers.id).futureValue must not be defined
     }
 
-    "must return true when there is no record to remove" in {
+    "return true when there is no record to remove" in {
       val result = repository.clear("id that does not exist").futureValue
 
       result mustEqual true
@@ -121,11 +121,11 @@ class SessionRepositorySpec
     mustPreserveMdc(repository.clear(userAnswers.id))
   }
 
-  ".keepAlive" - {
+  ".keepAlive" when {
 
-    "when there is a record for this id" - {
+    "there is a record for this id" must {
 
-      "must update its lastUpdated to `now` and return true" in {
+      "update its lastUpdated to `now` and return true" in {
 
         insert(userAnswers).futureValue
 
@@ -138,9 +138,9 @@ class SessionRepositorySpec
       }
     }
 
-    "when there is no record for this id" - {
+    "there is no record for this id" must {
 
-      "must return true" in {
+      "return true" in {
 
         repository.keepAlive("id that does not exist").futureValue mustEqual true
       }
@@ -150,7 +150,7 @@ class SessionRepositorySpec
   }
 
   private def mustPreserveMdc[A](f: => Future[A])(implicit pos: Position): Unit =
-    "must preserve MDC" in {
+    "preserve MDC" in {
 
       MDC.put("test", "foo")
 

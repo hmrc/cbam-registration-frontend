@@ -10,7 +10,7 @@ class $className$FormProviderSpec extends DateBehaviours {
   private implicit val messages: Messages = stubMessages()
   private val form = new $className$FormProvider()()
 
-  ".value" - {
+  ".value" must {
 
     val validData = datesBetween(
       min = LocalDate.of(2000, 1, 1),

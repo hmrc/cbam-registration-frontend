@@ -21,15 +21,15 @@ import java.time.LocalDate
 import generators.Generators
 import org.scalacheck.Gen
 import org.scalatest.OptionValues
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.test.Helpers.stubMessages
 
 class DateMappingsSpec
-    extends AnyFreeSpec
+    extends AnyWordSpec
     with Matchers
     with ScalaCheckPropertyChecks
     with Generators
@@ -56,7 +56,7 @@ class DateMappingsSpec
 
   val missingField: Gen[Option[String]] = Gen.option(Gen.const(""))
 
-  "must bind valid dates with months provided as numbers" in {
+  "bind valid dates with months provided as numbers" in {
 
     forAll(validData -> "valid date") { date =>
 
@@ -72,7 +72,7 @@ class DateMappingsSpec
     }
   }
 
-  "must bind valid dates with months provided as numbers with leading zeroes" in {
+  "bind valid dates with months provided as numbers with leading zeroes" in {
 
     forAll(validData -> "valid date") { date =>
 
@@ -88,7 +88,7 @@ class DateMappingsSpec
     }
   }
 
-  "must bind valid dates with months provided as full names in upper case" in {
+  "bind valid dates with months provided as full names in upper case" in {
 
     forAll(validData -> "valid date") { date =>
 
@@ -104,7 +104,7 @@ class DateMappingsSpec
     }
   }
 
-  "must bind valid dates with months provided as full names in lower case" in {
+  "bind valid dates with months provided as full names in lower case" in {
 
     forAll(validData -> "valid date") { date =>
 
@@ -120,7 +120,7 @@ class DateMappingsSpec
     }
   }
 
-  "must bind valid dates with months provided as three characters in upper case" in {
+  "bind valid dates with months provided as three characters in upper case" in {
 
     forAll(validData -> "valid date") { date =>
 
@@ -136,7 +136,7 @@ class DateMappingsSpec
     }
   }
 
-  "must bind valid dates with months provided as three characters in lower case" in {
+  "bind valid dates with months provided as three characters in lower case" in {
 
     forAll(validData -> "valid date") { date =>
 
@@ -152,14 +152,14 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind an empty date" in {
+  "fail to bind an empty date" in {
 
     val result = form.bind(Map.empty[String, String])
 
     result.errors must contain only FormError("value", "error.required.all", List.empty)
   }
 
-  "must fail to bind a date with a missing day" in {
+  "fail to bind a date with a missing day" in {
 
     forAll(validData -> "valid date", missingField -> "missing field") { (date, field) =>
 
@@ -178,7 +178,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with an invalid day" in {
+  "fail to bind a date with an invalid day" in {
 
     forAll(validData -> "valid date", invalidField -> "invalid field") { (date, field) =>
 
@@ -196,7 +196,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with a missing month" in {
+  "fail to bind a date with a missing month" in {
 
     forAll(validData -> "valid date", missingField -> "missing field") { (date, field) =>
 
@@ -215,7 +215,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with an invalid month" in {
+  "fail to bind a date with an invalid month" in {
 
     forAll(validData -> "valid data", invalidField -> "invalid field") { (date, field) =>
 
@@ -233,7 +233,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with a missing year" in {
+  "fail to bind a date with a missing year" in {
 
     forAll(validData -> "valid date", missingField -> "missing field") { (date, field) =>
 
@@ -252,7 +252,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with an invalid year" in {
+  "fail to bind a date with an invalid year" in {
 
     forAll(validData -> "valid data", invalidField -> "invalid field") { (date, field) =>
 
@@ -270,7 +270,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with a missing day and month" in {
+  "fail to bind a date with a missing day and month" in {
 
     forAll(validData -> "valid date", missingField -> "missing day", missingField -> "missing month") {
       (date, dayOpt, monthOpt) =>
@@ -297,7 +297,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with a missing day and year" in {
+  "fail to bind a date with a missing day and year" in {
 
     forAll(validData -> "valid date", missingField -> "missing day", missingField -> "missing year") {
       (date, dayOpt, yearOpt) =>
@@ -324,7 +324,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind a date with a missing month and year" in {
+  "fail to bind a date with a missing month and year" in {
 
     forAll(validData -> "valid date", missingField -> "missing month", missingField -> "missing year") {
       (date, monthOpt, yearOpt) =>
@@ -351,7 +351,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind an invalid day and month" in {
+  "fail to bind an invalid day and month" in {
 
     forAll(validData -> "valid date", invalidField -> "invalid day", invalidField -> "invalid month") {
       (date, day, month) =>
@@ -368,7 +368,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind an invalid day and year" in {
+  "fail to bind an invalid day and year" in {
 
     forAll(validData -> "valid date", invalidField -> "invalid day", invalidField -> "invalid year") {
       (date, day, year) =>
@@ -385,7 +385,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind an invalid month and year" in {
+  "fail to bind an invalid month and year" in {
 
     forAll(validData -> "valid date", invalidField -> "invalid month", invalidField -> "invalid year") {
       (date, month, year) =>
@@ -402,7 +402,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind an invalid day, month and year" in {
+  "fail to bind an invalid day, month and year" in {
 
     forAll(invalidField -> "valid day", invalidField -> "invalid month", invalidField -> "invalid year") {
       (day, month, year) =>
@@ -419,7 +419,7 @@ class DateMappingsSpec
     }
   }
 
-  "must fail to bind an invalid date" in {
+  "fail to bind an invalid date" in {
 
     val data = Map(
       "value.day"   -> "30",
@@ -434,7 +434,7 @@ class DateMappingsSpec
     )
   }
 
-  "must unbind a date" in {
+  "unbind a date" in {
 
     forAll(validData -> "valid date") { date =>
 

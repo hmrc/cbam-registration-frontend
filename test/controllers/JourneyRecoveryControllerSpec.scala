@@ -24,11 +24,11 @@ import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
 class JourneyRecoveryControllerSpec extends SpecBase {
 
-  "JourneyRecovery Controller" - {
+  "JourneyRecovery Controller" when {
 
-    "when a relative continue Url is supplied" - {
+    "a relative continue Url is supplied" must {
 
-      "must return OK and the continue view" in {
+      "return OK and the continue view" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -49,9 +49,9 @@ class JourneyRecoveryControllerSpec extends SpecBase {
       }
     }
 
-    "when an absolute continue Url is supplied" - {
+    "an absolute continue Url is supplied" must {
 
-      "must return OK and the start again view" in {
+      "return OK and the start again view" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -69,9 +69,9 @@ class JourneyRecoveryControllerSpec extends SpecBase {
       }
     }
 
-    "when no continue Url is supplied" - {
+    "no continue Url is supplied" must {
 
-      "must return OK and the start again view" in {
+      "return OK and the start again view" in {
 
         val application = applicationBuilder(userAnswers = None).build()
 

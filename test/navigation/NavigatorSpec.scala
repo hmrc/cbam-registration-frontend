@@ -25,20 +25,20 @@ class NavigatorSpec extends SpecBase {
 
   val navigator = new Navigator
 
-  "Navigator" - {
+  "Navigator" when {
 
-    "in Normal mode" - {
+    "in Normal mode" must {
 
-      "must go from a page that doesn't exist in the route map to Index" in {
+      "go from a page that doesn't exist in the route map to Index" in {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad()
       }
     }
 
-    "in Check mode" - {
+    "in Check mode" must {
 
-      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
+      "go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController

@@ -11,7 +11,7 @@ class $className$FormProviderSpec extends StringFieldBehaviours {
 
   val form = new $className$FormProvider()()
 
-  ".value" - {
+  ".value" must {
 
     val fieldName = "value"
 

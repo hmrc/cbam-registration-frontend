@@ -23,9 +23,9 @@ import views.html.IndexView
 
 class IndexControllerSpec extends SpecBase {
 
-  "Index Controller" - {
+  "Index Controller" must {
 
-    "must return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 

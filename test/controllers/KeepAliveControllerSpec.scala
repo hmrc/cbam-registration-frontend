@@ -26,11 +26,11 @@ import scala.concurrent.Future
 
 class KeepAliveControllerSpec extends SpecBase {
 
-  "keepAlive" - {
+  "keepAlive" when {
 
-    "when the user has answered some questions" - {
+    "the user has answered some questions" must {
 
-      "must keep the answers alive and return OK" in {
+      "keep the answers alive and return OK" in {
 
         when(mockSessionRepository.keepAlive(any())) thenReturn Future.successful(true)
 
@@ -50,9 +50,9 @@ class KeepAliveControllerSpec extends SpecBase {
       }
     }
 
-    "when the user has not answered any questions" - {
+    "the user has not answered any questions" must {
 
-      "must return OK" in {
+      "return OK" in {
 
         when(mockSessionRepository.keepAlive(any())) thenReturn Future.successful(true)
 

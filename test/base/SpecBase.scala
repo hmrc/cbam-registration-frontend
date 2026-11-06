@@ -21,9 +21,9 @@ import controllers.actions.*
 import models.{RichJsObject, UserAnswers}
 import org.mockito.Mockito.reset
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues, TryValues}
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 trait SpecBase
-    extends AnyFreeSpec
+    extends AnyWordSpec
     with GuiceOneAppPerSuite
     with Matchers
     with TryValues

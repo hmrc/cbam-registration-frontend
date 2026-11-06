@@ -8,7 +8,7 @@ class $className$FormProviderSpec extends OptionFieldBehaviours {
 
   val form = new $className$FormProvider()()
 
-  ".value" - {
+  ".value" must {
 
     val fieldName = "value"
     val requiredKey = "$className;format="decap"$.error.required"
