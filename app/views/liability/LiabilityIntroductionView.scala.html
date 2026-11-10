@@ -44,17 +44,9 @@
     )
     </p>
 
-    <div class="govuk-button-group">
-        @govukButton(
-            // TODO: Update to url for /expect-to-import when ready
-            ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue")
-            .asLink(controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url)
-        )
-        @link(
-            // TODO: Update to url for answers saved page when ready
-            href = controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url,
-            key = messages("site.saveAndComeBackLater"),
-            id = Some("save-answers")
-        )
-    </div>
+    @govukButton(
+        // TODO: Update to url for /expect-to-import when ready
+        ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue")
+        .asLink(controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url)
+    )
 }

@@ -65,10 +65,5 @@ class LiabilityIntroductionViewSpec extends ViewTestHelpers {
       controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url,
       ".govuk-button"
     )
-    checkLinkOnPage(
-      "Save and come back later",
-      controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url,
-      "#save-answers"
-    )
   }
 }
