@@ -26,3 +26,5 @@ GET         /non-admin                                   controllers.AssistantCa
 GET         /already-registered                          controllers.AlreadyRegisteredController.onPageLoad()
 
 GET         /date-liability-started                      controllers.liability.LiabilityIntroductionController.onPageLoad()
+
+GET         /do-not-register                             controllers.liability.DoNotRegisterController.onPageLoad()

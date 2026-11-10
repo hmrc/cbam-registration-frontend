@@ -80,3 +80,11 @@ liabilityIntroduction.bullet1 = when you first expected to import CBAM goods wor
 liabilityIntroduction.bullet2 = when you imported CBAM goods worth £50,000 or more into the UK in the past 12 months, as assessed on the first day of each month
 liabilityIntroduction.p3 = If both scenarios apply, your liability to register for CBAM starts on the earlier date.
 liabilityIntroduction.linkText = Find out more about when liability to register for CBAM starts (opens in new tab)
+
+doNotRegister.title = You do not need to register for CBAM
+doNotRegister.heading = You do not need to register for CBAM
+doNotRegister.p1 = You must register for CBAM if your organisation:
+doNotRegister.bullet1 = expects to import CBAM goods that are valued at £50,000 or more within the next 30 days
+doNotRegister.bullet2 = imported CBAM goods valued at £50,000 or more in the past 12 months, as assessed on the first day of each month
+doNotRegister.p2 = If your circumstances change and you meet either of these conditions, you must register for CBAM.
+doNotRegister.linkText = Find out when you must register for CBAM (opens in new tab)
