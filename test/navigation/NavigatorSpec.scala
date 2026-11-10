@@ -18,8 +18,10 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import pages._
-import models._
+import pages.*
+import models.*
+import play.api.libs.json.Json
+import play.api.mvc.Call
 
 class NavigatorSpec extends SpecBase {
 
@@ -29,6 +31,12 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" must {
 
+      "go from the ForwardLookingThreshold page to the next page" in {
+
+        val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> "yes"))
+        navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo")
+      }
+
       "go from a page that doesn't exist in the route map to ServiceEntryController" in {
 
         case object UnknownPage extends Page
@@ -37,6 +45,13 @@ class NavigatorSpec extends SpecBase {
     }
 
     "in Check mode" must {
+
+      "go from the ForwardLookingThreshold page to CheckYourAnswers" in {
+
+        val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> "yes"))
+        navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe routes.CheckYourAnswersController
+          .onPageLoad()
+      }
 
       "go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
 

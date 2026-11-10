@@ -16,6 +16,7 @@
 
 package views.liability
 
+import models.NormalMode
 import play.twirl.api.Html
 import utils.ViewTestHelpers
 import views.html.liability.LiabilityIntroductionView
@@ -62,7 +63,7 @@ class LiabilityIntroductionViewSpec extends ViewTestHelpers {
 
     checkLinkOnPage(
       "Continue",
-      controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url,
+      controllers.liability.routes.ForwardLookingThresholdController.onPageLoad(NormalMode).url,
       ".govuk-button"
     )
   }

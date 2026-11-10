@@ -24,10 +24,11 @@ import pages._
 import models._
 
 @Singleton
-class Navigator @Inject() () {
+class Navigator @Inject() {
 
-  private val normalRoutes: Page => UserAnswers => Call = { case _ =>
-    _ => routes.ServiceEntryController.onPageLoad()
+  private val normalRoutes: Page => UserAnswers => Call = {
+    case ForwardLookingThresholdPage => _ => Call("GET", "/todo") // TODO: next controller
+    case _                           => _ => routes.ServiceEntryController.onPageLoad()
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
