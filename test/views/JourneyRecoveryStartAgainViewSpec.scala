@@ -34,6 +34,6 @@ class JourneyRecoveryStartAgainViewSpec extends ViewTestHelpers {
     checkTitle()
     checkHeading()
     checkContentOnPage("[Add content to explain why the user needs to start again.]", ".govuk-body:nth-of-type(1)")
-    checkLinkOnPage("Start again", routes.IndexController.onPageLoad().url, ".govuk-button")
+    checkLinkOnPage("Start again", routes.ServiceEntryController.onPageLoad().url, ".govuk-button")
   }
 }
