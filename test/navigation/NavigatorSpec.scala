@@ -31,10 +31,23 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" must {
 
-      "go from the ForwardLookingThreshold page to the next page" in {
+      "go from the ForwardLookingThreshold page to the next page" when {
 
-        val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> "yes"))
-        navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo")
+        "the answer is yes" in {
+          val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> true))
+          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-yes")
+        }
+
+        "the answer is no" in {
+          val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> false))
+          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-no")
+        }
+
+        "there is no expected answer" in {
+          val answers = UserAnswers("id")
+          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
       }
 
       "go from a page that doesn't exist in the route map to ServiceEntryController" in {
@@ -48,7 +61,7 @@ class NavigatorSpec extends SpecBase {
 
       "go from the ForwardLookingThreshold page to CheckYourAnswers" in {
 
-        val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> "yes"))
+        val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> true))
         navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe routes.CheckYourAnswersController
           .onPageLoad()
       }
