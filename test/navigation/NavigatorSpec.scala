@@ -34,17 +34,17 @@ class NavigatorSpec extends SpecBase {
       "go from the ForwardLookingThreshold page to the next page" when {
 
         "the answer is yes" in {
-          val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> true))
+          val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
           navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-yes")
         }
 
         "the answer is no" in {
-          val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> false))
+          val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, false)
           navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-no")
         }
 
         "there is no expected answer" in {
-          val answers = UserAnswers("id")
+          val answers = emptyUserAnswers
           navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
             .onPageLoad()
         }
@@ -53,7 +53,7 @@ class NavigatorSpec extends SpecBase {
       "go from a page that doesn't exist in the route map to ServiceEntryController" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.ServiceEntryController.onPageLoad()
+        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.ServiceEntryController.onPageLoad()
       }
     }
 
@@ -61,7 +61,7 @@ class NavigatorSpec extends SpecBase {
 
       "go from the ForwardLookingThreshold page to CheckYourAnswers" in {
 
-        val answers = UserAnswers("id", Json.obj(ForwardLookingThresholdPage.toString -> true))
+        val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
         navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe routes.CheckYourAnswersController
           .onPageLoad()
       }
@@ -69,7 +69,7 @@ class NavigatorSpec extends SpecBase {
       "go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe routes.CheckYourAnswersController
           .onPageLoad()
       }
     }
