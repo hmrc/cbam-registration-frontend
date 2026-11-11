@@ -24,8 +24,9 @@ trait TestData {
 
   val clock: Clock = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
 
-  val userAnswersId: String = "id"
+  val testCredId: String = "cred0"
+  val testEori: String   = "GB12345612345678"
 
-  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId, lastUpdated = Instant.now(clock))
+  def emptyUserAnswers: UserAnswers = UserAnswers(testCredId, lastUpdated = Instant.now(clock))
 
 }

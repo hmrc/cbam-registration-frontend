@@ -24,7 +24,7 @@ import java.time.Instant
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
-    id: String,
+    credId: String,
     data: JsObject = Json.obj(),
     lastUpdated: Instant = Instant.now
 ) {
@@ -84,7 +84,7 @@ object UserAnswers {
       (__ \ "_id").write[String] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
-    )(ua => (ua.id, ua.data, ua.lastUpdated))
+    )(ua => (ua.credId, ua.data, ua.lastUpdated))
   }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)

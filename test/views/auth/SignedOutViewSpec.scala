@@ -31,9 +31,8 @@ class SignedOutViewSpec extends ViewTestHelpers {
 
   "SignedOut view" should {
 
-    checkTitle()
-    checkHeading()
-    checkContentOnPage("We did not save your answers.", ".govuk-body:nth-of-type(1)")
+    basicChecks(hasBackLink = false)
+    checkContentOnPage("We saved your answers.", ".govuk-body:nth-of-type(1)")
     checkLinkOnPage("Sign in", routes.ServiceEntryController.onPageLoad().url, ".govuk-button")
   }
 }
