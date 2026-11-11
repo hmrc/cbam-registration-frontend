@@ -131,12 +131,12 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
   ): Unit = {
     lazy val errorSummary = viewTest.select(summarySelector)
 
-    "the error summary" should {
-      "exist" in {
+    "have an error summary" which {
+      "exists" in {
         errorSummary.size() shouldBe 1
       }
 
-      "contain the title of 'There is a problem'" in {
+      "contains the title of 'There is a problem'" in {
         errorSummary.select("h2").first().text() shouldBe "There is a problem"
       }
 
@@ -153,8 +153,8 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
   )(implicit viewTest: ViewTest): Unit = {
     lazy val errorMessage = viewTest.select(errorSelector)
 
-    "the field error" should {
-      "exist" in {
+    "have a field error" which {
+      "exists" in {
         errorMessage.size() shouldBe expectedErrorCount
       }
 

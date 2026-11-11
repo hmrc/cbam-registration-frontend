@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import models.NormalMode
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
@@ -45,8 +47,7 @@
     </p>
 
     @govukButton(
-        // TODO: Update to url for /expect-to-import when ready
         ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue")
-        .asLink(controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url)
+        .asLink(controllers.liability.routes.ForwardLookingThresholdController.onPageLoad(NormalMode).url)
     )
 }

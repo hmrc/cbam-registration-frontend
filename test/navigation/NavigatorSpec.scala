@@ -18,8 +18,10 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import pages._
-import models._
+import pages.*
+import models.*
+import play.api.libs.json.Json
+import play.api.mvc.Call
 
 class NavigatorSpec extends SpecBase {
 
@@ -29,19 +31,45 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" must {
 
+      "go from the ForwardLookingThreshold page to the next page" when {
+
+        "the answer is yes" in {
+          val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
+          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-yes")
+        }
+
+        "the answer is no" in {
+          val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, false)
+          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-no")
+        }
+
+        "there is no expected answer" in {
+          val answers = emptyUserAnswers
+          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
+      }
+
       "go from a page that doesn't exist in the route map to ServiceEntryController" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.ServiceEntryController.onPageLoad()
+        navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe routes.ServiceEntryController.onPageLoad()
       }
     }
 
     "in Check mode" must {
 
+      "go from the ForwardLookingThreshold page to CheckYourAnswers" in {
+
+        val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
+        navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe routes.CheckYourAnswersController
+          .onPageLoad()
+      }
+
       "go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, UserAnswers("id")) mustBe routes.CheckYourAnswersController
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe routes.CheckYourAnswersController
           .onPageLoad()
       }
     }
