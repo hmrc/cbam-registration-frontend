@@ -31,6 +31,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.*
+import play.api.mvc.PlayBodyParsers
 import play.api.test.FakeRequest
 import queries.{Gettable, Settable}
 import repositories.SessionRepository
@@ -54,6 +55,8 @@ trait SpecBase
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
+  def injectedParsers: PlayBodyParsers = app.injector.instanceOf[PlayBodyParsers]
+
   final val mockSessionRepository: SessionRepository = mock[SessionRepository]
 
   override def beforeEach(): Unit = {
@@ -61,11 +64,16 @@ trait SpecBase
     super.beforeEach()
   }
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
+  protected def applicationBuilder(
+      userAnswers: Option[UserAnswers] = None,
+      hasEori: Boolean = true,
+      cdsEori: Option[String] = None,
+      cbamEori: Option[String] = None
+  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
+        bind[IdentifierAction].toInstance(new FakeIdentifierAction(injectedParsers, hasEori, cdsEori, cbamEori)),
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[SessionRepository].toInstance(mockSessionRepository)
       )

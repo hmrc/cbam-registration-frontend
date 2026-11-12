@@ -38,14 +38,14 @@ class ServiceEntryController @Inject() (
     with I18nSupport
     with Logging {
 
-  // TODO: Use required identifier in user answers and shift to backend
+  // TODO: Shift user answers to backend
   // TODO: Check if user is already registered via call to ETMP before creating user answers and redirect to /already-registered if so
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.userAnswers match {
       case None    =>
         for {
-          _ <- sessionRepository.set(UserAnswers(id = request.userId))
+          _ <- sessionRepository.set(UserAnswers(credId = request.credId))
         } yield Redirect(controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url)
       case Some(_) =>
         // TODO: Handle routing when user answers exist (e.g. if user is returning to service)

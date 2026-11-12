@@ -20,10 +20,16 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.routes
 import models.requests.IdentifierRequest
-import play.api.mvc.Results._
-import play.api.mvc._
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import play.api.Logging
+import play.api.mvc.*
+import play.api.mvc.Results.*
+import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual}
+import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
+import uk.gov.hmrc.auth.core.CredentialStrength.strong
+import uk.gov.hmrc.auth.core.authorise.Predicate
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, allEnrolments, credentialRole, credentials}
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -39,39 +45,60 @@ class AuthenticatedIdentifierAction @Inject() (
     val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
-    with AuthorisedFunctions {
+    with AuthorisedFunctions
+    with Logging {
+
+  private def predicate: Predicate =
+    AuthProviders(GovernmentGateway) and
+      CredentialStrength(strong) and
+      ConfidenceLevel.L50
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.internalId) {
-      _.map { internalId =>
-        block(IdentifierRequest(request, internalId))
-      }.getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
+    authorised(predicate).retrieve(credentials and allEnrolments and affinityGroup and credentialRole) {
+      case _ ~ _ ~ Some(Agent) ~ _                =>
+        Future.successful(Redirect(routes.AgentCannotRegisterController.onPageLoad()))
+      case _ ~ _ ~ Some(Individual) ~ _           =>
+        Future.successful(Redirect(routes.CannotRegisterIndividualController.onPageLoad()))
+      case _ ~ _ ~ _ ~ Some(Assistant)            =>
+        Future.successful(Redirect(routes.AssistantCannotRegisterController.onPageLoad()))
+      case Some(credentials) ~ enrolments ~ _ ~ _ =>
+        val hasEori: Boolean            = enrolments.enrolments.exists(_.identifiers.exists(_.key == config.eoriIdentifierKey))
+        val optCdsEori: Option[String]  =
+          getOptIdentifierValue(enrolments, config.cdsEnrolmentKey, config.eoriIdentifierKey)
+        val optCbamEori: Option[String] =
+          getOptIdentifierValue(enrolments, config.cbamEnrolmentKey, config.eoriIdentifierKey)
+        block(IdentifierRequest(request, credentials.providerId, hasEori, optCdsEori, optCbamEori))
+      case _                                      =>
+        logger.warn("[AuthenticatedIdentifierAction][invokeBlock] Unable to retrieve credId")
+        throw new UnauthorizedException("Failed to retrieve valid auth data")
     } recover {
-      case _: NoActiveSession        =>
-        Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
-      case _: AuthorisationException =>
+      case e: AuthorisationException =>
+        logger.info(s"[AuthenticatedIdentifierAction][invokeBlock] AuthorisationException: $e")
+        handleAuthException(e)
+      case e: UnauthorizedException  =>
+        logger.info(s"[AuthenticatedIdentifierAction][invokeBlock] UnauthorizedException: $e")
         Redirect(routes.UnauthorisedController.onPageLoad())
     }
   }
-}
 
-class SessionIdentifierAction @Inject() (
-    val parser: BodyParsers.Default
-)(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction {
-
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
-
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-    hc.sessionId match {
-      case Some(session) =>
-        block(IdentifierRequest(request, session.value))
-      case None          =>
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-    }
+  private def handleAuthException: PartialFunction[Throwable, Result] = {
+    case _: InsufficientEnrolments      => Redirect(routes.UnauthorisedController.onPageLoad())
+    case _: InsufficientConfidenceLevel => Redirect(routes.UnauthorisedController.onPageLoad())
+    case _: UnsupportedAuthProvider     => Redirect(routes.UnauthorisedController.onPageLoad())
+    case _: UnsupportedAffinityGroup    => Redirect(routes.UnauthorisedController.onPageLoad())
+    case _: UnsupportedCredentialRole   => Redirect(routes.UnauthorisedController.onPageLoad())
+    case _: IncorrectCredentialStrength => Redirect(routes.UnauthorisedController.onPageLoad())
+    case _                              =>
+      Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
   }
+
+  private def getOptIdentifierValue(
+      enrolments: Enrolments,
+      enrolmentKey: String,
+      identifierKey: String
+  ): Option[String] =
+    enrolments.getEnrolment(enrolmentKey).flatMap(_.getIdentifier(identifierKey)).map(_.value)
 }

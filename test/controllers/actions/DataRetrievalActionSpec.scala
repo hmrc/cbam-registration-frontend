@@ -19,14 +19,13 @@ package controllers.actions
 import base.SpecBase
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import org.mockito.Mockito._
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito.*
 import play.api.test.FakeRequest
 import repositories.SessionRepository
 
 import scala.concurrent.Future
 
-class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
+class DataRetrievalActionSpec extends SpecBase {
 
   class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
@@ -39,10 +38,10 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
       "set userAnswers to 'None' in the request" in {
 
         val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(None)
+        when(sessionRepository.get(testCredId)) thenReturn Future(None)
         val action            = new Harness(sessionRepository)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id")).futureValue
+        val result = action.callTransform(IdentifierRequest(FakeRequest(), testCredId, false, None, None)).futureValue
 
         result.userAnswers must not be defined
       }
@@ -53,10 +52,12 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
       "build a userAnswers object and add it to the request" in {
 
         val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))
+        when(sessionRepository.get(testCredId)) thenReturn Future(Some(UserAnswers(testCredId)))
         val action            = new Harness(sessionRepository)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id")).futureValue
+        val result = action
+          .callTransform(IdentifierRequest(FakeRequest(), testCredId, true, Some(testEori), Some(testEori)))
+          .futureValue
 
         result.userAnswers mustBe defined
       }

@@ -44,7 +44,7 @@ class ServiceEntryControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual
           controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url
 
-        verify(mockSessionRepository, times(1)).set(argThat(_.id == userAnswersId))
+        verify(mockSessionRepository, times(1)).set(argThat(_.credId == testCredId))
       }
     }
 

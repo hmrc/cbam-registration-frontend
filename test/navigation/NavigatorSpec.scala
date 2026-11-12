@@ -18,9 +18,8 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
-import pages.*
 import models.*
-import play.api.libs.json.Json
+import pages.*
 import play.api.mvc.Call
 
 class NavigatorSpec extends SpecBase {
