@@ -95,3 +95,7 @@ forwardLookingThreshold.heading = Do you expect to import CBAM goods that are va
 forwardLookingThreshold.hint = Do not include goods imported before 1 January 2027
 forwardLookingThreshold.checkYourAnswersLabel = Do you expect to import CBAM goods that are valued at £50,000 or more within the next 30 days?
 forwardLookingThreshold.error.required = Select yes if you expect to import CBAM goods valued at £50,000 or more within the next 30 days
+
+checkOrganisationDetails.title = We need to check your organisation’s details
+checkOrganisationDetails.heading = We need to check your organisation’s details
+checkOrganisationDetails.p1 = We’ll use the EORI number linked to your account to check the details we have for your organisation.
