@@ -25,3 +25,9 @@ case class IdentifierRequest[A](
     cdsEori: Option[String],
     cbamEori: Option[String]
 ) extends WrappedRequest[A](request)
+
+case class IdentifierRequestWithCbamEori[A](
+    request: Request[A],
+    credId: String,
+    cbamEori: String
+) extends WrappedRequest[A](request)

@@ -36,3 +36,17 @@ case class DataRequest[A](
     cbamEori: Option[String],
     userAnswers: UserAnswers
 ) extends WrappedRequest[A](request)
+
+case class OptionalDataRequestWithCbamEori[A](
+    request: Request[A],
+    credId: String,
+    cbamEori: String,
+    userAnswers: Option[UserAnswers]
+) extends WrappedRequest[A](request)
+
+case class DataRequestWithCbamEori[A](
+    request: Request[A],
+    credId: String,
+    cbamEori: String,
+    userAnswers: UserAnswers
+) extends WrappedRequest[A](request)

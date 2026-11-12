@@ -17,7 +17,7 @@
 package config
 
 import com.google.inject.AbstractModule
-import controllers.actions._
+import controllers.actions.*
 
 import java.time.{Clock, ZoneOffset}
 
@@ -25,6 +25,9 @@ class Module extends AbstractModule {
 
   override def configure(): Unit = {
 
+    bind(classOf[DataRetrievalWithCbamEoriAction]).to(classOf[DataRetrievalWithCbamEoriActionImpl]).asEagerSingleton()
+    bind(classOf[DataRequiredWithCbamEoriAction]).to(classOf[DataRequiredWithCbamEoriActionImpl]).asEagerSingleton()
+    bind(classOf[CbamEoriRequiredAction]).to(classOf[CbamEoriRequiredActionImpl]).asEagerSingleton()
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()

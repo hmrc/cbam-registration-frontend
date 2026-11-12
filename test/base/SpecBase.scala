@@ -72,8 +72,11 @@ trait SpecBase
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
+        bind[DataRequiredWithCbamEoriAction].to[DataRequiredWithCbamEoriActionImpl],
         bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[CbamEoriRequiredAction].to[CbamEoriRequiredActionImpl],
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(injectedParsers, hasEori, cdsEori, cbamEori)),
+        bind[DataRetrievalWithCbamEoriAction].toInstance(new FakeDataRetrievalWithCbamEoriAction(userAnswers)),
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[SessionRepository].toInstance(mockSessionRepository)
       )
