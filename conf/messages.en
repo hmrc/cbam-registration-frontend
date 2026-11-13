@@ -99,3 +99,15 @@ forwardLookingThreshold.error.required = Select yes if you expect to import CBAM
 checkOrganisationDetails.title = We need to check your organisation’s details
 checkOrganisationDetails.heading = We need to check your organisation’s details
 checkOrganisationDetails.p1 = We’ll use the EORI number linked to your account to check the details we have for your organisation.
+
+expectToExceedThreshold.title = When did you first expect to import CBAM goods with a total value of £50,000 or more?
+expectToExceedThreshold.heading = When did you first expect to import CBAM goods with a total value of £50,000 or more?
+expectToExceedThreshold.hint = For example, 27 3 2027.
+expectToExceedThreshold.checkYourAnswersLabel = ExpectToExceedThreshold
+expectToExceedThreshold.error.required.all = Enter date you first expected to import CBAM goods with a total value of £50,000 or more
+expectToExceedThreshold.error.required.two = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0} and {1}
+expectToExceedThreshold.error.required = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0}
+expectToExceedThreshold.error.invalid = Date you first expected to import CBAM goods with a total value of £50,000 or more must be a real date
+expectToExceedThreshold.change.hidden = ExpectToExceedThreshold
+expectToExceedThreshold.error.beforeJan27 = Date you first expected to import CBAM goods with a total value of £50,000 or more must be the same as or after 1 January 2027
+expectToExceedThreshold.error.notAfterToday = Date you first expected to import CBAM goods with a total value of £50,000 or more must be today or in the past
