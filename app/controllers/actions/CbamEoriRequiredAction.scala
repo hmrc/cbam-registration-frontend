@@ -17,7 +17,7 @@
 package controllers.actions
 
 import controllers.routes
-import models.requests.{IdentifierRequest, IdentifierRequestWithCbamEori}
+import models.requests.IdentifierRequest
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
 
@@ -29,15 +29,13 @@ class CbamEoriRequiredActionImpl @Inject() (implicit val executionContext: Execu
 
   override protected def refine[A](
       request: IdentifierRequest[A]
-  ): Future[Either[Result, IdentifierRequestWithCbamEori[A]]] =
+  ): Future[Either[Result, IdentifierRequest[A]]] =
     request.cbamEori match {
-      case None           =>
+      case None    =>
         Future.successful(Left(Redirect(routes.ServiceEntryController.onPageLoad())))
-      case Some(cbamEori) =>
-        Future.successful(
-          Right(IdentifierRequestWithCbamEori(request.request, request.credId, cbamEori))
-        )
+      case Some(_) =>
+        Future.successful(Right(request))
     }
 }
 
-trait CbamEoriRequiredAction extends ActionRefiner[IdentifierRequest, IdentifierRequestWithCbamEori]
+trait CbamEoriRequiredAction extends ActionRefiner[IdentifierRequest, IdentifierRequest]

@@ -18,7 +18,7 @@ package controllers.actions
 
 import base.SpecBase
 import controllers.routes
-import models.requests.{IdentifierRequest, IdentifierRequestWithCbamEori}
+import models.requests.IdentifierRequest
 import play.api.http.Status.SEE_OTHER
 import play.api.mvc.Result
 import play.api.test.FakeRequest
@@ -29,8 +29,7 @@ import scala.concurrent.Future
 class CbamEoriRequiredActionSpec extends SpecBase {
 
   class Harness extends CbamEoriRequiredActionImpl {
-    def actionRefine[A](request: IdentifierRequest[A]): Future[Either[Result, IdentifierRequestWithCbamEori[A]]] =
-      refine(request)
+    def actionRefine[A](request: IdentifierRequest[A]): Future[Either[Result, IdentifierRequest[A]]] = refine(request)
   }
 
   "CbamEoriRequiredAction" must {
@@ -76,7 +75,9 @@ class CbamEoriRequiredActionSpec extends SpecBase {
       result.map { request =>
         request.request  mustBe fakeRequest
         request.credId   mustBe testCredId
-        request.cbamEori mustBe testEori
+        request.hasEori  mustBe true
+        request.cdsEori  mustBe Some(testEori)
+        request.cbamEori mustBe Some(testEori)
       }
     }
   }
