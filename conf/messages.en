@@ -105,3 +105,15 @@ correctImporterSignIn.title = Sign in to the account for the importer that must 
 correctImporterSignIn.heading = Sign in to the account for the importer that must register for CBAM
 correctImporterSignIn.p1 = If you need to register a different importer, sign out and sign in with the account linked to that importer.
 correctImporterSignIn.linkText = Find out more about which importers must register for CBAM (opens in new tab)
+
+expectToExceedThreshold.title = When did you first expect to import CBAM goods with a total value of £50,000 or more?
+expectToExceedThreshold.heading = When did you first expect to import CBAM goods with a total value of £50,000 or more?
+expectToExceedThreshold.hint = For example, 27 3 2027.
+expectToExceedThreshold.checkYourAnswersLabel = ExpectToExceedThreshold
+expectToExceedThreshold.error.required.all = Enter date you first expected to import CBAM goods with a total value of £50,000 or more
+expectToExceedThreshold.error.required.two = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0} and {1}
+expectToExceedThreshold.error.required = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0}
+expectToExceedThreshold.error.invalid = Date you first expected to import CBAM goods with a total value of £50,000 or more must be a real date
+expectToExceedThreshold.change.hidden = ExpectToExceedThreshold
+expectToExceedThreshold.error.beforeJan27 = Date you first expected to import CBAM goods with a total value of £50,000 or more must be the same as or after 1 January 2027
+expectToExceedThreshold.error.notAfterToday = Date you first expected to import CBAM goods with a total value of £50,000 or more must be today or in the past

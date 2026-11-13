@@ -22,6 +22,8 @@ import models.*
 import pages.*
 import play.api.mvc.Call
 
+import java.time.LocalDate
+
 class NavigatorSpec extends SpecBase {
 
   val navigator = new Navigator
@@ -34,7 +36,10 @@ class NavigatorSpec extends SpecBase {
 
         "the answer is yes" in {
           val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
-          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-yes")
+          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call(
+            "GET",
+            "/cbam/registration/date-expected-to-import"
+          )
         }
 
         "the answer is no" in {
@@ -45,6 +50,20 @@ class NavigatorSpec extends SpecBase {
         "there is no expected answer" in {
           val answers = emptyUserAnswers
           navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
+      }
+
+      "go from the ExpectToExceedThreshold page to the next page" when {
+
+        "the provided date is valid" in {
+          val answers = emptyUserAnswers.withPage(ExpectToExceedThresholdPage, LocalDate.now())
+          navigator.nextPage(ExpectToExceedThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-valid-date")
+        }
+
+        "there is no date in the user answers" in {
+          val answers = emptyUserAnswers
+          navigator.nextPage(ExpectToExceedThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
             .onPageLoad()
         }
       }
