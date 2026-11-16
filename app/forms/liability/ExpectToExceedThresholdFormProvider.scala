@@ -27,23 +27,25 @@ import javax.inject.Inject
 class ExpectToExceedThresholdFormProvider @Inject() extends Mappings {
 
   private val notBeforeJan2027: LocalDate => Boolean = { date =>
-    val yearToUse: Int = if(LocalDate.now(ZoneOffset.UTC).getYear == 2026) 2026 else 2027 //TODO Remove in the new year - This is only to allow the service to work pre-2027 for testing purposes
-    val startOf2027 = LocalDate.of(yearToUse, 1, 1)
+    val yearToUse: Int =
+      if (LocalDate.now(ZoneOffset.UTC).getYear == 2026) 2026
+      else 2027 // TODO Remove in the new year - This is only to allow the service to work pre-2027 for testing purposes
+    val startOf2027    = LocalDate.of(yearToUse, 1, 1)
     date.isAfter(startOf2027)
   }
-  
+
   private val notAfterCurrent: LocalDate => Boolean = { date =>
     val currentDate = LocalDate.now(ZoneOffset.UTC).plusDays(1)
     date.isBefore(currentDate)
   }
-  
+
   def apply()(implicit messages: Messages): Form[LocalDate] =
     Form(
       "value" -> localDate(
-        invalidKey     = "expectToExceedThreshold.error.invalid",
+        invalidKey = "expectToExceedThreshold.error.invalid",
         allRequiredKey = "expectToExceedThreshold.error.required.all",
         twoRequiredKey = "expectToExceedThreshold.error.required.two",
-        requiredKey    = "expectToExceedThreshold.error.required"
+        requiredKey = "expectToExceedThreshold.error.required"
       )
         .verifying("expectToExceedThreshold.error.beforeJan27", notBeforeJan2027)
         .verifying("expectToExceedThreshold.error.notAfterToday", notAfterCurrent)

@@ -25,21 +25,20 @@ import utils.DateTimeFormats.dateTimeFormat
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ExpectToExceedThresholdSummary  {
+object ExpectToExceedThresholdSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ExpectToExceedThresholdPage).map {
-      answer =>
+    answers.get(ExpectToExceedThresholdPage).map { answer =>
 
-        implicit val lang: Lang = messages.lang
+      implicit val lang: Lang = messages.lang
 
-        SummaryListRowViewModel(
-          key     = "expectToExceedThreshold.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.format(dateTimeFormat())),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.ExpectToExceedThresholdController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("expectToExceedThreshold.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "expectToExceedThreshold.checkYourAnswersLabel",
+        value = ValueViewModel(answer.format(dateTimeFormat())),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.ExpectToExceedThresholdController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("expectToExceedThreshold.change.hidden"))
         )
+      )
     }
 }

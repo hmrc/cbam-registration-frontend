@@ -27,52 +27,58 @@ import java.time.{LocalDate, ZoneOffset}
 class ExpectToExceedThresholdFormProviderSpec extends DateBehaviours {
 
   private implicit val messages: Messages = stubMessages()
-  private val form = new ExpectToExceedThresholdFormProvider()()
+  private val form                        = new ExpectToExceedThresholdFormProvider()()
 
   ".value" should {
-    
+
     "parse correctly" when {
-      
+
       "a valid date is presented" in {
         val todaysDate = LocalDate.now(ZoneOffset.UTC)
-        
+
         val boundForm = form.bind(
           Map(
-            "value.day" -> todaysDate.getDayOfMonth.toString,
+            "value.day"   -> todaysDate.getDayOfMonth.toString,
             "value.month" -> todaysDate.getMonthValue.toString,
-            "value.year" -> todaysDate.getYear.toString
+            "value.year"  -> todaysDate.getYear.toString
           )
         )
-        
+
         boundForm.errors.length mustBe 0
-        boundForm.value mustBe Some(todaysDate)
+        boundForm.value         mustBe Some(todaysDate)
       }
     }
-    
+
     "return an error" when {
-      
+
       "the date is pre-2027" in {
-        form.bind(
-          Map(
-            "value.day" -> 1.toString,
-            "value.month" -> 1.toString,
-            "value.year" -> 2025.toString
+        form
+          .bind(
+            Map(
+              "value.day"   -> 1.toString,
+              "value.month" -> 1.toString,
+              "value.year"  -> 2025.toString
+            )
           )
-        ).error("value").map(_.message) mustBe Some("expectToExceedThreshold.error.beforeJan27")
+          .error("value")
+          .map(_.message) mustBe Some("expectToExceedThreshold.error.beforeJan27")
       }
-      
+
       "the date is after the current date" in {
         val dayAfter: LocalDate = LocalDate.now(ZoneOffset.UTC).plusDays(1)
-        
-        form.bind(
-          Map(
-            "value.day" -> dayAfter.getDayOfMonth.toString,
-            "value.month" -> dayAfter.getMonthValue.toString,
-            "value.year" -> dayAfter.getYear.toString
+
+        form
+          .bind(
+            Map(
+              "value.day"   -> dayAfter.getDayOfMonth.toString,
+              "value.month" -> dayAfter.getMonthValue.toString,
+              "value.year"  -> dayAfter.getYear.toString
+            )
           )
-        ).error("value").map(_.message) mustBe Some("expectToExceedThreshold.error.notAfterToday")
+          .error("value")
+          .map(_.message) mustBe Some("expectToExceedThreshold.error.notAfterToday")
       }
-      
+
     }
   }
 }

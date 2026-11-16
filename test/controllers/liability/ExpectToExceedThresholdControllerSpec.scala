@@ -18,7 +18,6 @@ package controllers.liability
 
 import base.SpecBase
 import controllers.liability.routes
-import controllers.routes => baseRoute
 
 import forms.liability.ExpectToExceedThresholdFormProvider
 import models.{NormalMode, UserAnswers}
@@ -43,7 +42,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
   private implicit val messages: Messages = stubMessages()
 
   private val formProvider = new ExpectToExceedThresholdFormProvider()
-  private def form = formProvider()
+  private def form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -75,7 +74,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[ExpectToExceedThresholdView]
 
-        status(result) mustEqual OK
+        status(result)          mustEqual OK
         contentAsString(result) mustEqual view(form, NormalMode)(getRequest(), messages(application)).toString
       }
     }
@@ -91,8 +90,11 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, getRequest()).value
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(getRequest(), messages(application)).toString
+        status(result)          mustEqual OK
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+          getRequest(),
+          messages(application)
+        ).toString
       }
     }
 
@@ -109,7 +111,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val result = route(application, postRequest()).value
 
-        status(result) mustEqual SEE_OTHER
+        status(result)                 mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
       }
     }
@@ -129,7 +131,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        status(result) mustEqual BAD_REQUEST
+        status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
       }
     }
@@ -141,8 +143,8 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val result = route(application, getRequest()).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoute.JourneyRecoveryController.onPageLoad().url
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -153,8 +155,8 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val result = route(application, postRequest()).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual baseRoute.JourneyRecoveryController.onPageLoad().url
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

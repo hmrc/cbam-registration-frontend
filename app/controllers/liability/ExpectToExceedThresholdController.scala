@@ -30,29 +30,30 @@ import views.html.liability.ExpectToExceedThresholdView
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ExpectToExceedThresholdController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: ExpectToExceedThresholdFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: ExpectToExceedThresholdView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class ExpectToExceedThresholdController @Inject() (
+    override val messagesApi: MessagesApi,
+    sessionRepository: SessionRepository,
+    navigator: Navigator,
+    identify: IdentifierAction,
+    getData: DataRetrievalAction,
+    requireData: DataRequiredAction,
+    formProvider: ExpectToExceedThresholdFormProvider,
+    val controllerComponents: MessagesControllerComponents,
+    view: ExpectToExceedThresholdView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
 
-      val form = formProvider()
+    val form = formProvider()
 
-      val preparedForm = request.userAnswers.get(ExpectToExceedThresholdPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+    val preparedForm = request.userAnswers.get(ExpectToExceedThresholdPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -60,15 +61,15 @@ class ExpectToExceedThresholdController @Inject()(
 
       val form = formProvider()
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpectToExceedThresholdPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ExpectToExceedThresholdPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpectToExceedThresholdPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(ExpectToExceedThresholdPage, mode, updatedAnswers))
+        )
   }
 }
