@@ -30,8 +30,7 @@ class Navigator @Inject() {
     case ForwardLookingThresholdPage =>
       userAnswers =>
         userAnswers.get(ForwardLookingThresholdPage) match {
-          case Some(true)  =>
-            Call("GET", controllers.liability.routes.ExpectToExceedThresholdController.onPageLoad(NormalMode).url)
+          case Some(true)  => controllers.liability.routes.ExpectToExceedThresholdController.onPageLoad(NormalMode)
           case Some(false) => Call("GET", "/todo-no") // TODO screen 12
           case _           => routes.JourneyRecoveryController.onPageLoad()
         }

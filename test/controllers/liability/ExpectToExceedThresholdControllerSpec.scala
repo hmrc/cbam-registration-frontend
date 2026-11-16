@@ -32,7 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.liability.ExpectToExceedThresholdView
 
-import java.time.{LocalDate, ZoneOffset}
+import java.time.{LocalDate, ZoneId, ZoneOffset}
 import scala.concurrent.Future
 
 class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
@@ -44,7 +44,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = LocalDate.now(ZoneOffset.UTC)
+  val validAnswer = LocalDate.now(ZoneId.of("Europe/London"))
 
   lazy val expectToExceedThresholdRoute = routes.ExpectToExceedThresholdController.onPageLoad(NormalMode).url
 

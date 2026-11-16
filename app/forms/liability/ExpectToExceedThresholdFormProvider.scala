@@ -18,25 +18,24 @@ package forms.liability
 
 import forms.mappings.Mappings
 import play.api.data.Form
-import play.api.data.validation.Constraint
 import play.api.i18n.Messages
 
-import java.time.{LocalDate, ZoneId, ZoneOffset}
+import java.time.{LocalDate, ZoneId}
 import javax.inject.Inject
 
 class ExpectToExceedThresholdFormProvider @Inject() extends Mappings {
 
   private val notBeforeJan2027: LocalDate => Boolean = { date =>
     val yearToUse: Int =
-      if (LocalDate.now(ZoneOffset.UTC).getYear == 2026) 2026
+      if (LocalDate.now(ZoneId.of("Europe/London")).getYear == 2026) 2026
       else 2027 // TODO Remove in the new year - This is only to allow the service to work pre-2027 for testing purposes
     val startOf2027    = LocalDate.of(yearToUse, 1, 1)
-    date.isAfter(startOf2027)
+    !date.isBefore(startOf2027)
   }
 
   private val notAfterCurrent: LocalDate => Boolean = { date =>
-    val currentDate = LocalDate.now(ZoneOffset.UTC).plusDays(1)
-    date.isBefore(currentDate)
+    val currentDate = LocalDate.now(ZoneId.of("Europe/London"))
+    date.isBefore(currentDate.plusDays(1))
   }
 
   def apply()(implicit messages: Messages): Form[LocalDate] =

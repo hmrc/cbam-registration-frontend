@@ -38,7 +38,7 @@ class NavigatorSpec extends SpecBase {
           val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
           navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call(
             "GET",
-            "/cbam/registration/date-expected-to-import"
+            "/cbam/registration/date-expect-to-import"
           )
         }
 

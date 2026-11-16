@@ -362,7 +362,13 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkDateForm(day: String, month: String, year: String, rootId: String = "value")(implicit
+  def checkDateForm(
+      day: String,
+      month: String,
+      year: String,
+      rootId: String = "value",
+      hintText: Option[String] = None
+  )(implicit
       viewTest: ViewTest
   ): Unit = {
     val dayForm    = viewTest.select(s"#$rootId.day")
@@ -374,6 +380,12 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
 
     s"have a date form with the root selector of '$rootId'" which {
       case class PeriodTest(period: String, expectedValue: String, formField: Elements, label: Elements)
+
+      hintText.foreach { hint =>
+        "has the correct hint text" in {
+          viewTest.select(s"#$rootId-hint").text() shouldBe hint
+        }
+      }
 
       Seq(
         PeriodTest("Day", day, dayForm, dayLabel),

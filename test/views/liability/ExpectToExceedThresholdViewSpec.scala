@@ -47,7 +47,8 @@ class ExpectToExceedThresholdViewSpec extends ViewTestHelpers {
         implicit val viewTest: ViewTest = createViewTest()
 
         basicChecks()
-        checkDateForm("", "", "")
+        checkDateForm("", "", "", hintText = Some("For example, 27 3 2027."))
+
         checkButton(
           "Save and continue",
           "#main-content > div > div > form > div.govuk-button-group > button"
