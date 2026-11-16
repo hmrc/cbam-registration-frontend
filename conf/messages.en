@@ -11,6 +11,7 @@ site.saveAndComeBackLater = Save and come back later
 site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
+site.signOut = Sign out
 site.govuk = GOV.UK
 
 date.day = Day
@@ -99,3 +100,8 @@ forwardLookingThreshold.error.required = Select yes if you expect to import CBAM
 checkOrganisationDetails.title = We need to check your organisation’s details
 checkOrganisationDetails.heading = We need to check your organisation’s details
 checkOrganisationDetails.p1 = We’ll use the EORI number linked to your account to check the details we have for your organisation.
+
+correctImporterSignIn.title = Sign in to the account for the importer that must register for CBAM
+correctImporterSignIn.heading = Sign in to the account for the importer that must register for CBAM
+correctImporterSignIn.p1 = If you need to register a different importer, sign out and sign in with the account linked to that importer.
+correctImporterSignIn.linkText = Find out more about which importers must register for CBAM (opens in new tab)
