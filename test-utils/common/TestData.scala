@@ -22,7 +22,7 @@ import java.time.{Clock, Instant, ZoneId}
 
 trait TestData {
 
-  val clock: Clock = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC"))
+  val clock: Clock = Clock.fixed(Instant.ofEpochMilli(1718118467838L), ZoneId.of("UTC")) // 11 June 2024
 
   val testCredId: String = "cred0"
   val testEori: String   = "GB12345612345678"

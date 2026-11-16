@@ -21,21 +21,33 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.i18n.Lang
 import utils.DateTimeFormats.dateTimeFormat
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 
 class DateTimeFormatsSpec extends AnyWordSpec with Matchers {
 
   ".dateTimeFormat" must {
 
-    "format dates in English" in {
+    "format LocalDate in English" in {
       val formatter = dateTimeFormat()(Lang("en"))
       val result    = LocalDate.of(2023, 1, 1).format(formatter)
       result mustEqual "1 January 2023"
     }
 
-    "format dates in Welsh" in {
+    "format LocalDate in Welsh" in {
       val formatter = dateTimeFormat()(Lang("cy"))
       val result    = LocalDate.of(2023, 1, 1).format(formatter)
+      result mustEqual "1 Ionawr 2023"
+    }
+
+    "format Instant in English" in {
+      val formatter = dateTimeFormat()(Lang("en"))
+      val result    = formatter.format(Instant.parse("2023-01-01T00:00:00Z"))
+      result mustEqual "1 January 2023"
+    }
+
+    "format Instant in Welsh" in {
+      val formatter = dateTimeFormat()(Lang("cy"))
+      val result    = formatter.format(Instant.parse("2023-01-01T00:00:00Z"))
       result mustEqual "1 Ionawr 2023"
     }
 

@@ -117,3 +117,12 @@ expectToExceedThreshold.error.invalid = Date you first expected to import CBAM g
 expectToExceedThreshold.change.hidden = ExpectToExceedThreshold
 expectToExceedThreshold.error.beforeJan27 = Date you first expected to import CBAM goods with a total value of £50,000 or more must be the same as or after 1 January 2027
 expectToExceedThreshold.error.notAfterToday = Date you first expected to import CBAM goods with a total value of £50,000 or more must be today or in the past
+
+noEORINumber.title = We could not find an EORI number linked to this account
+noEORINumber.heading = We could not find an EORI number linked to this account
+noEORINumber.p1 = If your organisation has an EORI number, you might be signed in to the wrong account.
+noEORINumber.a1 = Sign out and sign in with the account linked to the importer you need to register for CBAM
+noEORINumber.p2 = If your organisation does not have an EORI number that starts with GB, you must get one before registering for CBAM.
+noEORINumber.a2 = Get an EORI number starting with GB
+noEORINumber.p3 = It can take up to 5 working days for your EORI number application to be approved.
+noEORINumber.p4 = After your EORI number application is approved, return to this service to finish your CBAM registration. Your answers will be saved until {0}.
