@@ -33,8 +33,6 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(NormalMode).url
 
-  override val emptyUserAnswers = UserAnswers(userAnswersId)
-
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, $className;format="decap"$Route)
 
@@ -64,7 +62,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set($className$Page, validAnswer).success.value
+      val userAnswers = emptyUserAnswers.withPage($className$Page, validAnswer)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

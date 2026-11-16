@@ -35,3 +35,5 @@ GET         /change-expect-to-import                     controllers.liability.F
 POST        /change-expect-to-import                     controllers.liability.ForwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
 
 GET         /check-organisation-details                  controllers.checkDetails.CheckOrganisationDetailsController.onPageLoad()
+
+GET         /sign-in-importer-account                    controllers.checkDetails.CorrectImporterSignInController.onPageLoad()

@@ -52,7 +52,7 @@ class CbamEoriRequiredActionSpec extends SpecBase {
       result.headers.get(LOCATION) mustBe Some(routes.ServiceEntryController.onPageLoad().url)
     }
 
-    "return an IdentifierRequestWithCbamEori with the correct values when cbamEori exists" in {
+    "return an IdentifierRequest with the correct values when cbamEori exists" in {
 
       val harness = new Harness
 
