@@ -21,7 +21,8 @@
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukDateInput: GovukDateInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    link: components.Link
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
@@ -41,9 +42,15 @@
             )
             .withHint(HintViewModel(messages("expectToExceedThreshold.hint")))
         )
-
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+        
+        <div class="govuk-button-group">
+            @govukButton(
+                ButtonViewModel(messages("site.saveAndContinue"))
+            )
+            @link(
+                href = "/todo", // TODO: URL for saving
+                key = messages("site.saveAndComeBackLater")
+            )
+        </div>
     }
 }

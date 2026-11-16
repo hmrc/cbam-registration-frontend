@@ -49,8 +49,13 @@ class ExpectToExceedThresholdViewSpec extends ViewTestHelpers {
         basicChecks()
         checkDateForm("", "", "")
         checkButton(
-          "Continue",
-          "#main-content > div > div > form > button"
+          "Save and continue",
+          "#main-content > div > div > form > div.govuk-button-group > button"
+        )
+        checkLinkOnPage(
+          "Save and come back later",
+          "/todo",
+          "#main-content > div > div > form > div.govuk-button-group > a"
         )
       }
 
@@ -63,8 +68,13 @@ class ExpectToExceedThresholdViewSpec extends ViewTestHelpers {
         checkErrorSummary("Summet gon wrong")
         checkDateForm("", "", "")
         checkButton(
-          "Continue",
-          "#main-content > div > div > form > button"
+          "Save and continue",
+          "#main-content > div > div > form > div.govuk-button-group > button"
+        )
+        checkLinkOnPage(
+          "Save and come back later",
+          "/todo",
+          "#main-content > div > div > form > div.govuk-button-group > a"
         )
       }
     }
