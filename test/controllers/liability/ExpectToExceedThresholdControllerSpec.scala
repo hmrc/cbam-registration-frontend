@@ -18,7 +18,6 @@ package controllers.liability
 
 import base.SpecBase
 import controllers.liability.routes
-
 import forms.liability.ExpectToExceedThresholdFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -31,7 +30,6 @@ import play.api.inject.bind
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import repositories.SessionRepository
 import views.html.liability.ExpectToExceedThresholdView
 
 import java.time.{LocalDate, ZoneOffset}
@@ -50,7 +48,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
 
   lazy val expectToExceedThresholdRoute = routes.ExpectToExceedThresholdController.onPageLoad(NormalMode).url
 
-  override val emptyUserAnswers = UserAnswers(userAnswersId)
+  override val emptyUserAnswers = UserAnswers(testCredId)
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, expectToExceedThresholdRoute)
@@ -81,7 +79,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ExpectToExceedThresholdPage, validAnswer).success.value
+      val userAnswers = UserAnswers(testCredId).set(ExpectToExceedThresholdPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
