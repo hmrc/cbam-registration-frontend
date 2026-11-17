@@ -17,49 +17,76 @@
 package controllers.actions
 
 import base.SpecBase
+import connectors.UserAnswersConnector
 import models.UserAnswers
+import models.errors.ApiError.{InternalServerError, NotFoundError}
 import models.requests.{IdentifierRequest, OptionalDataRequest}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.*
+import play.api.mvc.Result
 import play.api.test.FakeRequest
-import repositories.SessionRepository
+import play.api.test.Helpers.*
+import types.ResultT
 
 import scala.concurrent.Future
 
 class DataRetrievalActionSpec extends SpecBase {
 
-  class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
-    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
+  class Harness(userAnswersConnector: UserAnswersConnector) extends DataRetrievalActionImpl(userAnswersConnector) {
+    def actionRefine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] = refine(request)
   }
 
   "Data Retrieval Action" when {
 
-    "there is no data in the cache" must {
+    "user answers do not exist" must {
 
       "set userAnswers to 'None' in the request" in {
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(testCredId))(any())) thenReturn ResultT.fromError(NotFoundError)
+        val action               = new Harness(userAnswersConnector)
 
-        val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get(testCredId)) thenReturn Future(None)
-        val action            = new Harness(sessionRepository)
+        val result = action.actionRefine(IdentifierRequest(FakeRequest(), testCredId, false, None, None)).futureValue
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), testCredId, false, None, None)).futureValue
-
-        result.userAnswers must not be defined
+        result.isRight mustBe true
+        result.map { optionalDataRequest =>
+          optionalDataRequest.userAnswers must not be defined
+        }
       }
     }
 
-    "there is data in the cache" must {
+    "user answers exist" must {
 
       "build a userAnswers object and add it to the request" in {
-
-        val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get(testCredId)) thenReturn Future(Some(UserAnswers(testCredId)))
-        val action            = new Harness(sessionRepository)
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(testCredId))(any())) thenReturn ResultT.fromValue(emptyUserAnswers)
+        val action               = new Harness(userAnswersConnector)
 
         val result = action
-          .callTransform(IdentifierRequest(FakeRequest(), testCredId, true, Some(testEori), Some(testEori)))
+          .actionRefine(IdentifierRequest(FakeRequest(), testCredId, true, Some(testEori), Some(testEori)))
           .futureValue
 
-        result.userAnswers mustBe defined
+        result.isRight mustBe true
+        result.map { optionalDataRequest =>
+          optionalDataRequest.userAnswers mustBe Some(emptyUserAnswers)
+        }
+      }
+    }
+
+    "UserAnswersConnector returns an error other than NOT_FOUND" must {
+
+      "redirect to the Journey Recovery controller" in {
+        val userAnswersConnector = mock[UserAnswersConnector]
+        when(userAnswersConnector.get(eqTo(testCredId))(any())) thenReturn ResultT.fromError(InternalServerError)
+        val action               = new Harness(userAnswersConnector)
+
+        val result = action.actionRefine(IdentifierRequest(FakeRequest(), testCredId, false, None, None))
+
+        val redirectResult = result.map {
+          case Left(res) => res
+          case Right(_)  => fail("Expected a Left to be returned")
+        }
+        status(redirectResult) mustBe SEE_OTHER
+        redirectLocation(redirectResult).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

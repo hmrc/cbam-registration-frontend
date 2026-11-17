@@ -16,12 +16,11 @@
 
 package controllers
 
+import connectors.UserAnswersConnector
 import controllers.actions.*
-import models.UserAnswers
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
@@ -31,21 +30,20 @@ class ServiceEntryController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
-    sessionRepository: SessionRepository,
+    userAnswersConnector: UserAnswersConnector,
     val controllerComponents: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  // TODO: Shift user answers to backend
   // TODO: Check if user is already registered via call to ETMP before creating user answers and redirect to /already-registered if so
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     request.userAnswers match {
       case None    =>
         for {
-          _ <- sessionRepository.set(UserAnswers(credId = request.credId))
+          _ <- userAnswersConnector.create(request.credId)
         } yield Redirect(controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url)
       case Some(_) =>
         // TODO: Handle routing when user answers exist (e.g. if user is returning to service)

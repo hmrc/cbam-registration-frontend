@@ -16,6 +16,7 @@
 
 package controllers.liability
 
+import connectors.UserAnswersConnector
 import controllers.actions.*
 import forms.liability.ExpectToExceedThresholdFormProvider
 import models.Mode
@@ -23,7 +24,6 @@ import navigation.Navigator
 import pages.ExpectToExceedThresholdPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.liability.ExpectToExceedThresholdView
 
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ExpectToExceedThresholdController @Inject() (
     override val messagesApi: MessagesApi,
-    sessionRepository: SessionRepository,
+    userAnswersConnector: UserAnswersConnector,
     navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
@@ -68,7 +68,7 @@ class ExpectToExceedThresholdController @Inject() (
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpectToExceedThresholdPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(ExpectToExceedThresholdPage, mode, updatedAnswers))
         )
   }

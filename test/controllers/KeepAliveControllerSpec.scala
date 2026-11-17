@@ -17,10 +17,11 @@
 package controllers
 
 import base.SpecBase
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{never, times, verify, when}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future
 
@@ -32,7 +33,7 @@ class KeepAliveControllerSpec extends SpecBase {
 
       "keep the answers alive and return OK" in {
 
-        when(mockSessionRepository.keepAlive(any())) thenReturn Future.successful(true)
+        when(mockUserAnswersConnector.keepAlive(any())(any())) thenReturn Future.successful(true)
 
         val application =
           applicationBuilder(Some(emptyUserAnswers))
@@ -45,7 +46,7 @@ class KeepAliveControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockSessionRepository, times(1)).keepAlive(emptyUserAnswers.credId)
+          verify(mockUserAnswersConnector, times(1)).keepAlive(eqTo(emptyUserAnswers.credId))(any())
         }
       }
     }
@@ -53,8 +54,6 @@ class KeepAliveControllerSpec extends SpecBase {
     "the user has not answered any questions" must {
 
       "return OK" in {
-
-        when(mockSessionRepository.keepAlive(any())) thenReturn Future.successful(true)
 
         val application =
           applicationBuilder(None)
@@ -67,7 +66,7 @@ class KeepAliveControllerSpec extends SpecBase {
           val result = route(application, request).value
 
           status(result) mustEqual OK
-          verify(mockSessionRepository, never()).keepAlive(any())
+          verify(mockUserAnswersConnector, never()).keepAlive(any())(any())
         }
       }
     }

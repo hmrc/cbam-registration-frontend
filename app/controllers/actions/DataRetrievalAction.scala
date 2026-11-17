@@ -16,22 +16,58 @@
 
 package controllers.actions
 
-import javax.inject.Inject
+import connectors.UserAnswersConnector
+import models.errors.ApiError.NotFoundError
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import play.api.mvc.ActionTransformer
-import repositories.SessionRepository
+import play.api.Logging
+import play.api.mvc.Results.Redirect
+import play.api.mvc.{ActionRefiner, Result}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject() (
-    val sessionRepository: SessionRepository
+    val userAnswersConnector: UserAnswersConnector
 )(implicit val executionContext: ExecutionContext)
-    extends DataRetrievalAction {
+    extends DataRetrievalAction
+    with Logging {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    sessionRepository.get(request.credId).map {
-      OptionalDataRequest(request.request, request.credId, request.hasEori, request.cdsEori, request.cbamEori, _)
+  override protected def refine[A](request: IdentifierRequest[A]): Future[Either[Result, OptionalDataRequest[A]]] =
+
+    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+    userAnswersConnector.get(request.credId).value.map {
+      case Right(ua)           =>
+        Right(
+          OptionalDataRequest(
+            request.request,
+            request.credId,
+            request.hasEori,
+            request.cdsEori,
+            request.cbamEori,
+            Some(ua)
+          )
+        )
+      case Left(NotFoundError) =>
+        logger.info(s"[DataRetrievalAction][refine] No user answers found for credId ${request.credId}")
+        Right(
+          OptionalDataRequest(
+            request.request,
+            request.credId,
+            request.hasEori,
+            request.cdsEori,
+            request.cbamEori,
+            None
+          )
+        )
+      case Left(error)         =>
+        logger.warn(
+          s"[DataRetrievalAction][refine] Data retrieval failed for credId ${request.credId}. Error: $error"
+        )
+        Left(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
     }
 }
 
-trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]
+trait DataRetrievalAction extends ActionRefiner[IdentifierRequest, OptionalDataRequest]

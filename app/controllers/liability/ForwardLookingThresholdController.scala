@@ -16,6 +16,7 @@
 
 package controllers.liability
 
+import connectors.UserAnswersConnector
 import controllers.actions.*
 import forms.ForwardLookingThresholdFormProvider
 import models.Mode
@@ -24,7 +25,6 @@ import pages.ForwardLookingThresholdPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.liability.ForwardLookingThresholdView
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ForwardLookingThresholdController @Inject() (
     override val messagesApi: MessagesApi,
-    sessionRepository: SessionRepository,
+    userAnswersConnector: UserAnswersConnector,
     navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
@@ -66,7 +66,7 @@ class ForwardLookingThresholdController @Inject() (
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(ForwardLookingThresholdPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
+              _              <- userAnswersConnector.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(ForwardLookingThresholdPage, mode, updatedAnswers))
         )
   }
