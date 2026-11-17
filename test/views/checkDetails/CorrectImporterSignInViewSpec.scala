@@ -16,22 +16,13 @@
 
 package views.checkDetails
 
-import config.FrontendAppConfig
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.twirl.api.Html
 import utils.ViewTestHelpers
 import views.html.checkDetails.CorrectImporterSignInView
 
 class CorrectImporterSignInViewSpec extends ViewTestHelpers {
 
-  val appWithConfig: Application = new GuiceApplicationBuilder()
-    .configure("urls.signOut" -> "signOutUrl", "urls.loginContinue" -> "loginContinueUrl")
-    .build()
-
   implicit val viewTest: ViewTest = new ViewTest {
-    override implicit lazy val appConfig: FrontendAppConfig = appWithConfig.injector.instanceOf[FrontendAppConfig]
-
     override val page: Html          = inject[CorrectImporterSignInView].apply()
     override val pageTitle: String   = "Sign in to the account for the importer that must register for CBAM"
     override val pageHeading: String = "Sign in to the account for the importer that must register for CBAM"
@@ -53,7 +44,7 @@ class CorrectImporterSignInViewSpec extends ViewTestHelpers {
 
     checkLinkOnPage(
       "Sign out",
-      "signOutUrl?continue=loginContinueUrl",
+      viewTest.appConfig.signInToStartUrl,
       ".govuk-button"
     )
   }

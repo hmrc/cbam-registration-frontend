@@ -41,6 +41,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val loginContinueUrl: String  = configuration.get[String]("urls.loginContinue")
   val signOutUrl: String        = configuration.get[String]("urls.signOut")
   val serviceTimeoutUrl: String = configuration.get[String]("urls.serviceTimeout")
+  val signInToStartUrl: String  = s"$signOutUrl?continue=$loginContinueUrl"
 
   private val exitSurveyBaseUrl: String = configuration.get[String]("feedback-frontend.host")
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/cbam-registration-frontend?useServiceNavigation"

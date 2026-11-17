@@ -42,3 +42,5 @@ POST        /change-date-expect-to-import               controllers.liability.Ex
 GET         /check-organisation-details                  controllers.checkDetails.CheckOrganisationDetailsController.onPageLoad()
 
 GET         /sign-in-importer-account                    controllers.checkDetails.CorrectImporterSignInController.onPageLoad()
+
+GET         /no-eori-number                              controllers.checkDetails.NoEORINumberController.onPageLoad()

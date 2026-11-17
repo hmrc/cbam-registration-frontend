@@ -17,7 +17,6 @@
 package controllers.liability
 
 import base.SpecBase
-import controllers.liability.routes
 import forms.liability.ExpectToExceedThresholdFormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
@@ -32,7 +31,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.liability.ExpectToExceedThresholdView
 
-import java.time.{LocalDate, ZoneId, ZoneOffset}
+import java.time.{LocalDate, ZoneId}
 import scala.concurrent.Future
 
 class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
