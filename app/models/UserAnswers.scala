@@ -16,9 +16,11 @@
 
 package models
 
+import play.api.i18n.{Lang, Messages}
 import play.api.libs.json.*
 import queries.{Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import utils.DateTimeFormats
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit.DAYS
@@ -30,7 +32,11 @@ final case class UserAnswers(
     lastUpdated: Instant = Instant.now
 ) {
 
-  val expiryDate: Instant = lastUpdated.plus(30, DAYS)
+  def expiryDateString(implicit messages: Messages): String = {
+    implicit val lang: Lang = messages.lang
+    val dateFormatter       = DateTimeFormats.dateTimeFormat()
+    dateFormatter.format(lastUpdated.plus(30, DAYS))
+  }
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)
@@ -70,7 +76,7 @@ object UserAnswers {
 
   val reads: Reads[UserAnswers] = {
 
-    import play.api.libs.functional.syntax._
+    import play.api.libs.functional.syntax.*
 
     (
       (__ \ "_id").read[String] and
@@ -81,7 +87,7 @@ object UserAnswers {
 
   val writes: OWrites[UserAnswers] = {
 
-    import play.api.libs.functional.syntax._
+    import play.api.libs.functional.syntax.*
 
     (
       (__ \ "_id").write[String] and

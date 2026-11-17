@@ -19,10 +19,9 @@ package controllers.checkDetails
 import config.FrontendAppConfig
 import controllers.actions.*
 import play.api.Logging
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.DateTimeFormats
 import views.html.checkDetails.NoEORINumberView
 
 import javax.inject.Inject
@@ -41,10 +40,7 @@ class NoEORINumberController @Inject() (
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     if (!request.hasEori) {
-      implicit val lang: Lang = messagesApi.preferred(request).lang
-      val dateFormatter       = DateTimeFormats.dateTimeFormat()
-      val answersExpiryDate   = dateFormatter.format(request.userAnswers.expiryDate)
-      Ok(view(answersExpiryDate))
+      Ok(view(request.userAnswers.expiryDateString))
     } else {
       logger.warn("[NoEORINumberController][onPageLoad] - The request contains a EORI. Redirecting to journey recovery")
       Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
