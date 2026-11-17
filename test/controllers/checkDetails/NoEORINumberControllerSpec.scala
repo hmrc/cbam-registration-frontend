@@ -17,6 +17,7 @@
 package controllers.checkDetails
 
 import base.SpecBase
+import config.FrontendAppConfig
 import controllers.{checkDetails, routes}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -40,10 +41,11 @@ class NoEORINumberControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[NoEORINumberView]
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val view      = application.injector.instanceOf[NoEORINumberView]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(dateString)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(dateString)(request, messages(application), appConfig).toString
       }
     }
 
@@ -58,6 +60,20 @@ class NoEORINumberControllerSpec extends SpecBase {
 
         status(result)        mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(routes.JourneyRecoveryController.onPageLoad().url)
+      }
+    }
+
+    "redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, checkDetails.routes.NoEORINumberController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

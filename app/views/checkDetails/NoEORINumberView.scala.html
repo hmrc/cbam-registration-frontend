@@ -14,13 +14,15 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
         link: components.Link
 )
 
-@(answersExpiryDate: String)(implicit request: Request[_], messages: Messages)
+@(answersExpiryDate: String)(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
 @layout(pageTitle = titleNoForm(messages("noEORINumber.title"))) {
 
@@ -28,7 +30,7 @@
 
     <p class="govuk-body">@messages("noEORINumber.p1")</p>
 
-    <p class="govuk-body">@link(controllers.auth.routes.AuthController.signOutNoSurvey().url, "noEORINumber.a1")</p>
+    <p class="govuk-body">@link(appConfig.signInToStartUrl, "noEORINumber.a1")</p>
 
     <p class="govuk-body">@messages("noEORINumber.p2")</p>
 

@@ -40,6 +40,6 @@
 
     @govukButton(
         ButtonViewModel(messages("site.signOut"))
-        .asLink(s"${appConfig.signOutUrl}?continue=${appConfig.loginContinueUrl}")
+        .asLink(appConfig.signInToStartUrl)
     )
 }

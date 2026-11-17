@@ -24,7 +24,7 @@ import java.util.Locale
 
 object DateTimeFormats {
 
-  private val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy").withZone(ZoneId.of("UTC"))
+  private val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy").withZone(ZoneId.of("Europe/London"))
 
   private val localisedDateTimeFormatters = Map(
     "en" -> dateTimeFormatter,

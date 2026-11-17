@@ -16,11 +16,12 @@
 
 package models
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import queries.{Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
+import java.time.temporal.ChronoUnit.DAYS
 import scala.util.{Failure, Success, Try}
 
 final case class UserAnswers(
@@ -28,6 +29,8 @@ final case class UserAnswers(
     data: JsObject = Json.obj(),
     lastUpdated: Instant = Instant.now
 ) {
+
+  val expiryDate: Instant = lastUpdated.plus(30, DAYS)
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).getOrElse(None)

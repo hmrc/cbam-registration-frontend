@@ -20,7 +20,7 @@ import play.twirl.api.Html
 import utils.ViewTestHelpers
 import views.html.checkDetails.NoEORINumberView
 
-class NOEoriNumberViewSpec extends ViewTestHelpers {
+class NoEORINumberViewSpec extends ViewTestHelpers {
 
   val dateString = "11 July 2024"
 
@@ -39,7 +39,7 @@ class NOEoriNumberViewSpec extends ViewTestHelpers {
     )
     checkLinkOnPage(
       "Sign out and sign in with the account linked to the importer you need to register for CBAM",
-      controllers.auth.routes.AuthController.signOutNoSurvey().url,
+      viewTest.appConfig.signInToStartUrl,
       ".govuk-body:nth-of-type(2) > a"
     )
     checkContentOnPage(
