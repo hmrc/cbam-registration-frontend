@@ -362,18 +362,30 @@ trait ViewTestHelpers extends AnyWordSpec with Matchers with GuiceOneAppPerSuite
     }
   }
 
-  def checkDateForm(day: String, month: String, year: String, rootSelector: String = "date-input")(implicit
+  def checkDateForm(
+      day: String,
+      month: String,
+      year: String,
+      rootId: String = "value",
+      hintText: Option[String] = None
+  )(implicit
       viewTest: ViewTest
   ): Unit = {
-    val dayForm    = viewTest.select(s"#$rootSelector-day")
-    val dayLabel   = viewTest.select(s"[for=$rootSelector-day]")
-    val monthForm  = viewTest.select(s"#$rootSelector-month")
-    val monthLabel = viewTest.select(s"[for=$rootSelector-month]")
-    val yearForm   = viewTest.select(s"#$rootSelector-year")
-    val yearLabel  = viewTest.select(s"[for=$rootSelector-year]")
+    val dayForm    = viewTest.select(s"#$rootId.day")
+    val dayLabel   = viewTest.select(s"[for=$rootId.day]")
+    val monthForm  = viewTest.select(s"#$rootId.month")
+    val monthLabel = viewTest.select(s"[for=$rootId.month]")
+    val yearForm   = viewTest.select(s"#$rootId.year")
+    val yearLabel  = viewTest.select(s"[for=$rootId.year]")
 
-    s"have a date form with the root selector of '$rootSelector'" which {
+    s"have a date form with the root selector of '$rootId'" which {
       case class PeriodTest(period: String, expectedValue: String, formField: Elements, label: Elements)
+
+      hintText.foreach { hint =>
+        "has the correct hint text" in {
+          viewTest.select(s"#$rootId-hint").text() shouldBe hint
+        }
+      }
 
       Seq(
         PeriodTest("Day", day, dayForm, dayLabel),

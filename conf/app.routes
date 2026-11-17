@@ -34,6 +34,11 @@ POST        /expect-to-import                            controllers.liability.F
 GET         /change-expect-to-import                     controllers.liability.ForwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-expect-to-import                     controllers.liability.ForwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
 
+GET         /date-expect-to-import                      controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = NormalMode)
+POST        /date-expect-to-import                      controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = NormalMode)
+GET         /change-date-expect-to-import               controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-date-expect-to-import               controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = CheckMode)
+
 GET         /check-organisation-details                  controllers.checkDetails.CheckOrganisationDetailsController.onPageLoad()
 
 GET         /sign-in-importer-account                    controllers.checkDetails.CorrectImporterSignInController.onPageLoad()
