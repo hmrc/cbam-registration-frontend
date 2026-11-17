@@ -44,3 +44,5 @@ GET         /check-organisation-details                  controllers.checkDetail
 GET         /sign-in-importer-account                    controllers.checkDetails.CorrectImporterSignInController.onPageLoad()
 
 GET         /no-eori-number                              controllers.checkDetails.NoEORINumberController.onPageLoad()
+
+GET         /subscribe-customs-declaration-service        controllers.NeedToSubscribeCDSController.onPageLoad()
