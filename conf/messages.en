@@ -98,6 +98,37 @@ forwardLookingThreshold.checkYourAnswersLabel = Do you expect to import CBAM goo
 forwardLookingThreshold.error.required = Select yes if you expect to import CBAM goods valued at £50,000 or more within the next 30 days
 forwardLookingThreshold.change.hidden = whether you expect to import CBAM goods that are valued at £50,000 or more within the next 30 days
 
+expectToExceedThreshold.title = When did you first expect to import CBAM goods with a total value of £50,000 or more?
+expectToExceedThreshold.heading = When did you first expect to import CBAM goods with a total value of £50,000 or more?
+expectToExceedThreshold.hint = For example, 27 3 2027
+expectToExceedThreshold.checkYourAnswersLabel = When did you first expect to import CBAM goods with with a total value of £50,000 or more?
+expectToExceedThreshold.error.required.all = Enter date you first expected to import CBAM goods with a total value of £50,000 or more
+expectToExceedThreshold.error.required.two = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0} and {1}
+expectToExceedThreshold.error.required = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0}
+expectToExceedThreshold.error.invalid = Date you first expected to import CBAM goods with a total value of £50,000 or more must be a real date
+expectToExceedThreshold.change.hidden = when you first expected to import CBAM goods with with a total value of £50,000 or more
+expectToExceedThreshold.error.beforeJan27 = Date you first expected to import CBAM goods with a total value of £50,000 or more must be the same as or after 1 January 2027
+expectToExceedThreshold.error.notAfterToday = Date you first expected to import CBAM goods with a total value of £50,000 or more must be today or in the past
+
+backwardLookingThreshold.title = Have you imported CBAM goods that are valued at £50,000 or more in the past 12 months?
+backwardLookingThreshold.heading = Have you imported CBAM goods that are valued at £50,000 or more in the past 12 months?
+backwardLookingThreshold.hint = Do not include goods imported before 1 January 2027
+backwardLookingThreshold.checkYourAnswersLabel = Have you imported CBAM goods that are valued at £50,000 or more in the past 12 months?
+backwardLookingThreshold.error.required = Select yes if you imported CBAM goods valued at £50,000 or more in the past 12 months
+backwardLookingThreshold.change.hidden = whether you imported CBAM goods that are valued at £50,000 or more in the past 12 months
+
+backwardLookingDate.title = When did your imports of CBAM goods reach £50,000 or more within the past 12 months?
+backwardLookingDate.heading = When did your imports of CBAM goods reach £50,000 or more within the past 12 months?
+backwardLookingDate.hint = For example, 27 3 2027
+backwardLookingDate.error.required.all = Enter date your imports of CBAM goods reached £50,000 or more within the past 12 months
+backwardLookingDate.error.required.two = Date your imports of CBAM goods reached £50,000 must include a {0} and {1}
+backwardLookingDate.error.required = Date your imports of CBAM goods reached £50,000 must include a {0}
+backwardLookingDate.error.invalid = Date your imports of CBAM goods reached £50,000 must be a real date
+backwardLookingDate.error.beforeJan27 = Date your imports of CBAM goods reached £50,000 must be the same as or after 1 January 2027
+backwardLookingDate.error.notAfterToday = Date your imports of CBAM goods reached £50,000 must be today or in the past
+backwardLookingDate.checkYourAnswersLabel = When did your imports of CBAM goods reach £50,000 or more within the past 12 months?
+backwardLookingDate.change.hidden = when your imports of CBAM goods reached £50,000 or more within the past 12 months
+
 checkOrganisationDetails.title = We need to check your organisation’s details
 checkOrganisationDetails.heading = We need to check your organisation’s details
 checkOrganisationDetails.p1 = We’ll use the EORI number linked to your account to check the details we have for your organisation.
@@ -106,18 +137,6 @@ correctImporterSignIn.title = Sign in to the account for the importer that must 
 correctImporterSignIn.heading = Sign in to the account for the importer that must register for CBAM
 correctImporterSignIn.p1 = If you need to register a different importer, sign out and sign in with the account linked to that importer.
 correctImporterSignIn.linkText = Find out more about which importers must register for CBAM (opens in new tab)
-
-expectToExceedThreshold.title = When did you first expect to import CBAM goods with a total value of £50,000 or more?
-expectToExceedThreshold.heading = When did you first expect to import CBAM goods with a total value of £50,000 or more?
-expectToExceedThreshold.hint = For example, 27 3 2027.
-expectToExceedThreshold.checkYourAnswersLabel = ExpectToExceedThreshold
-expectToExceedThreshold.error.required.all = Enter date you first expected to import CBAM goods with a total value of £50,000 or more
-expectToExceedThreshold.error.required.two = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0} and {1}
-expectToExceedThreshold.error.required = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0}
-expectToExceedThreshold.error.invalid = Date you first expected to import CBAM goods with a total value of £50,000 or more must be a real date
-expectToExceedThreshold.change.hidden = when you first expected to import CBAM goods with with a total value of £50,000 or more
-expectToExceedThreshold.error.beforeJan27 = Date you first expected to import CBAM goods with a total value of £50,000 or more must be the same as or after 1 January 2027
-expectToExceedThreshold.error.notAfterToday = Date you first expected to import CBAM goods with a total value of £50,000 or more must be today or in the past
 
 noEORINumber.title = We could not find an EORI number linked to this account
 noEORINumber.heading = We could not find an EORI number linked to this account
@@ -139,10 +158,3 @@ needToSubscribeCDS.p3 = After your subscription is approved, return to this serv
 needToSubscribeCDS.p4 = If your organisation has already subscribed to the Customs Declaration Service, you might be signed in to the wrong account.
 needToSubscribeCDS.signOutLink = Sign out and sign in with the account linked to the importer you need to register for CBAM
 needToSubscribeCDS.button = Subscribe to Customs Declaration Service
-
-backwardLookingThreshold.title = Have you imported CBAM goods that are valued at £50,000 or more in the past 12 months?
-backwardLookingThreshold.heading = Have you imported CBAM goods that are valued at £50,000 or more in the past 12 months?
-backwardLookingThreshold.hint = Do not include goods imported before 1 January 2027
-backwardLookingThreshold.checkYourAnswersLabel = Have you imported CBAM goods that are valued at £50,000 or more in the past 12 months?
-backwardLookingThreshold.error.required = Select yes if you imported CBAM goods valued at £50,000 or more in the past 12 months
-backwardLookingThreshold.change.hidden = whether you imported CBAM goods that are valued at £50,000 or more in the past 12 months

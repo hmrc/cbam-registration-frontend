@@ -44,6 +44,11 @@ POST        /imported-past-12-months                     controllers.liability.B
 GET         /change-imported-past-12-months              controllers.liability.BackwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-imported-past-12-months              controllers.liability.BackwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
 
+GET         /when-imported-past-12-months                controllers.liability.BackwardLookingDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /when-imported-past-12-months                controllers.liability.BackwardLookingDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-when-imported-past-12-months         controllers.liability.BackwardLookingDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-when-imported-past-12-months         controllers.liability.BackwardLookingDateController.onSubmit(mode: Mode = CheckMode)
+
 GET         /check-organisation-details                  controllers.checkDetails.CheckOrganisationDetailsController.onPageLoad()
 
 GET         /sign-in-importer-account                    controllers.checkDetails.CorrectImporterSignInController.onPageLoad()

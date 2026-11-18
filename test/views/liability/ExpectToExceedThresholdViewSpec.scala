@@ -16,6 +16,7 @@
 
 package views.liability
 
+import controllers.liability.routes
 import forms.liability.ExpectToExceedThresholdFormProvider
 import models.NormalMode
 import play.api.data.{Form, FormError}
@@ -47,7 +48,8 @@ class ExpectToExceedThresholdViewSpec extends ViewTestHelpers {
         implicit val viewTest: ViewTest = createViewTest()
 
         basicChecks()
-        checkDateForm("", "", "", hintText = Some("For example, 27 3 2027."))
+        checkDateForm("", "", "", hintText = Some("For example, 27 3 2027"))
+        checkFormCall(routes.ExpectToExceedThresholdController.onSubmit(NormalMode).url)
 
         checkButton(
           "Save and continue",
@@ -67,7 +69,9 @@ class ExpectToExceedThresholdViewSpec extends ViewTestHelpers {
 
         basicChecks()
         checkErrorSummary("Summet gon wrong")
-        checkDateForm("", "", "")
+        checkDateForm("", "", "", hintText = Some("For example, 27 3 2027"))
+        checkFormCall(routes.ExpectToExceedThresholdController.onSubmit(NormalMode).url)
+
         checkButton(
           "Save and continue",
           "#main-content > div > div > form > div.govuk-button-group > button"
