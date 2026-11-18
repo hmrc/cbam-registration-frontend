@@ -34,10 +34,15 @@ POST        /expect-to-import                            controllers.liability.F
 GET         /change-expect-to-import                     controllers.liability.ForwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-expect-to-import                     controllers.liability.ForwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
 
-GET         /date-expect-to-import                      controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = NormalMode)
-POST        /date-expect-to-import                      controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = NormalMode)
-GET         /change-date-expect-to-import               controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-date-expect-to-import               controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = CheckMode)
+GET         /date-expect-to-import                       controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = NormalMode)
+POST        /date-expect-to-import                       controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = NormalMode)
+GET         /change-date-expect-to-import                controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-date-expect-to-import                controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = CheckMode)
+
+GET         /imported-past-12-months                     controllers.liability.BackwardLookingThresholdController.onPageLoad(mode: Mode = NormalMode)
+POST        /imported-past-12-months                     controllers.liability.BackwardLookingThresholdController.onSubmit(mode: Mode = NormalMode)
+GET         /change-imported-past-12-months              controllers.liability.BackwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-imported-past-12-months              controllers.liability.BackwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
 
 GET         /check-organisation-details                  controllers.checkDetails.CheckOrganisationDetailsController.onPageLoad()
 

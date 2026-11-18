@@ -27,20 +27,28 @@ import models._
 class Navigator @Inject() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case ForwardLookingThresholdPage =>
+    case ForwardLookingThresholdPage  =>
       userAnswers =>
         userAnswers.get(ForwardLookingThresholdPage) match {
           case Some(true)  => controllers.liability.routes.ExpectToExceedThresholdController.onPageLoad(NormalMode)
-          case Some(false) => Call("GET", "/todo-no") // TODO screen 12
+          case Some(false) => controllers.liability.routes.BackwardLookingThresholdController.onPageLoad(NormalMode)
           case _           => routes.JourneyRecoveryController.onPageLoad()
         }
-    case ExpectToExceedThresholdPage =>
+    case ExpectToExceedThresholdPage  =>
       userAnswers =>
         userAnswers.get(ExpectToExceedThresholdPage) match {
-          case Some(_) => Call("GET", "/todo-valid-date")
+          case Some(_) => controllers.liability.routes.BackwardLookingThresholdController.onPageLoad(NormalMode)
           case _       => routes.JourneyRecoveryController.onPageLoad()
         }
-    case _                           => _ => routes.ServiceEntryController.onPageLoad()
+    case BackwardLookingThresholdPage =>
+      userAnswers =>
+        (userAnswers.get(BackwardLookingThresholdPage), userAnswers.get(ForwardLookingThresholdPage)) match {
+          case (Some(true), Some(_))      => Call("GET", "/todo-13") // TODO screen 13
+          case (Some(false), Some(true))  => Call("GET", "/todo-14") // TODO screen 14
+          case (Some(false), Some(false)) => controllers.liability.routes.DoNotRegisterController.onPageLoad()
+          case _                          => routes.JourneyRecoveryController.onPageLoad()
+        }
+    case _                            => _ => routes.ServiceEntryController.onPageLoad()
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = { case _ =>

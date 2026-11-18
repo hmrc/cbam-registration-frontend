@@ -18,7 +18,7 @@ package controllers.liability
 
 import connectors.UserAnswersConnector
 import controllers.actions.*
-import forms.ForwardLookingThresholdFormProvider
+import forms.liability.ForwardLookingThresholdFormProvider
 import models.Mode
 import navigation.Navigator
 import pages.ForwardLookingThresholdPage

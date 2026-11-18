@@ -16,7 +16,6 @@
 
 package forms.liability
 
-import forms.ForwardLookingThresholdFormProvider
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 

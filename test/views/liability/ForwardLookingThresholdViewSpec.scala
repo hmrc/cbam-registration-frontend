@@ -17,7 +17,7 @@
 package views.liability
 
 import controllers.liability.routes
-import forms.ForwardLookingThresholdFormProvider
+import forms.liability.ForwardLookingThresholdFormProvider
 import models.NormalMode
 import play.api.data.Form
 import play.twirl.api.Html
