@@ -126,3 +126,15 @@ noEORINumber.p2 = If your organisation does not have an EORI number that starts 
 noEORINumber.a2 = Get an EORI number starting with GB
 noEORINumber.p3 = It can take up to 5 working days for your EORI number application to be approved.
 noEORINumber.p4 = After your EORI number application is approved, return to this service to finish your CBAM registration. Your answers will be saved until {0}.
+
+needToSubscribeCDS.title = You need to subscribe to the Customs Declaration Service before registering for CBAM
+needToSubscribeCDS.heading = You need to subscribe to the Customs Declaration Service before registering for CBAM
+needToSubscribeCDS.p1 = Subscribing to the Customs Declaration Service will allow you to do things such as:
+needToSubscribeCDS.bullet1 = submit import and export declarations using software
+needToSubscribeCDS.bullet2 = get your postponed import VAT statements or get your import VAT certificates so you can complete your VAT Return
+needToSubscribeCDS.bullet3 = pay Customs Duty and import VAT
+needToSubscribeCDS.p2 = It usually takes 2 hours to approve your subscription, but it can take up to 5 working days if we need to make more checks.
+needToSubscribeCDS.p3 = After your subscription is approved, return to this service to finish your registration for CBAM. Your answers will be saved until {0}.
+needToSubscribeCDS.p4 = If your organisation has already subscribed to the Customs Declaration Service, you might be signed in to the wrong account.
+needToSubscribeCDS.signOutLink = Sign out and sign in with the account linked to the importer you need to register for CBAM
+needToSubscribeCDS.button = Subscribe to Customs Declaration Service
