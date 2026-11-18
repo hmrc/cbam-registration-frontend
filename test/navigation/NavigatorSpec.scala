@@ -118,6 +118,12 @@ class NavigatorSpec extends SpecBase {
           navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
             .onPageLoad()
         }
+
+        "there are no expected answers" in {
+          val answers = emptyUserAnswers
+          navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
       }
 
       "go from a page that doesn't exist in the route map to ServiceEntryController" in {
