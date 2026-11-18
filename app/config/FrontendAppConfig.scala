@@ -57,9 +57,16 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  val cacheTtl: Long = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-
   val cbamEnrolmentKey: String  = configuration.get[String]("enrolments.enrolmentKey.cbam")
   val cdsEnrolmentKey: String   = configuration.get[String]("enrolments.enrolmentKey.cds")
   val eoriIdentifierKey: String = configuration.get[String]("enrolments.identifierKey.eori")
+
+  def userAnswersGetUrl(credId: String): String       = s"$cbamRegistrationBackendBaseUrl/user-answers/$credId"
+  def userAnswersSetUrl: String                       = s"$cbamRegistrationBackendBaseUrl/user-answers"
+  def userAnswersCreateUrl(credId: String): String    = s"$cbamRegistrationBackendBaseUrl/user-answers/create/$credId"
+  def userAnswersDeleteUrl(credId: String): String    = s"$cbamRegistrationBackendBaseUrl/user-answers/delete/$credId"
+  def userAnswersKeepAliveUrl(credId: String): String =
+    s"$cbamRegistrationBackendBaseUrl/user-answers/keep-alive/$credId"
+  def userAnswersClearAllUrl: String                  = s"$cbamRegistrationBackendBaseUrl/test-only/user-answers/clear-all"
+
 }

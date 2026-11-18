@@ -18,7 +18,7 @@ package controllers.liability
 
 import base.SpecBase
 import forms.liability.ExpectToExceedThresholdFormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -46,8 +46,6 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
   val validAnswer = LocalDate.now(ZoneId.of("Europe/London"))
 
   lazy val expectToExceedThresholdRoute = routes.ExpectToExceedThresholdController.onPageLoad(NormalMode).url
-
-  override val emptyUserAnswers = UserAnswers(testCredId)
 
   def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, expectToExceedThresholdRoute)
@@ -78,7 +76,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(testCredId).set(ExpectToExceedThresholdPage, validAnswer).success.value
+      val userAnswers = emptyUserAnswers.withPage(ExpectToExceedThresholdPage, validAnswer)
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -96,7 +94,7 @@ class ExpectToExceedThresholdControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "redirect to the next page when valid data is submitted" in {
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))

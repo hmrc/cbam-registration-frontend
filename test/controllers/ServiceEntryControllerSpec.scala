@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import org.mockito.ArgumentMatchers.{any, argThat}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -31,7 +31,7 @@ class ServiceEntryControllerSpec extends SpecBase {
   "ServiceEntry Controller" must {
 
     "create user answers and redirect when user answers do not exist" in {
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockUserAnswersConnector.create(any())(any())) thenReturn Future.successful(true)
 
       val application = applicationBuilder(userAnswers = None).build()
 
@@ -44,11 +44,11 @@ class ServiceEntryControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual
           controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url
 
-        verify(mockSessionRepository, times(1)).set(argThat(_.credId == testCredId))
+        verify(mockUserAnswersConnector, times(1)).create(eqTo(testCredId))(any())
       }
     }
 
-    "redirect without saving new user answers when user answers exist" in {
+    "redirect without creating new user answers when user answers exist" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
@@ -60,7 +60,7 @@ class ServiceEntryControllerSpec extends SpecBase {
         redirectLocation(result).value mustEqual
           controllers.liability.routes.LiabilityIntroductionController.onPageLoad().url
 
-        verify(mockSessionRepository, times(0)).set(any())
+        verify(mockUserAnswersConnector, times(0)).create(any())(any())
       }
     }
   }

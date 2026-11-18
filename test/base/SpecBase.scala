@@ -17,6 +17,7 @@
 package base
 
 import common.TestData
+import connectors.UserAnswersConnector
 import controllers.actions.*
 import models.{RichJsObject, UserAnswers}
 import org.mockito.Mockito.reset
@@ -34,7 +35,6 @@ import play.api.libs.json.*
 import play.api.mvc.PlayBodyParsers
 import play.api.test.FakeRequest
 import queries.{Gettable, Settable}
-import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
@@ -57,10 +57,10 @@ trait SpecBase
 
   def injectedParsers: PlayBodyParsers = app.injector.instanceOf[PlayBodyParsers]
 
-  final val mockSessionRepository: SessionRepository = mock[SessionRepository]
+  final val mockUserAnswersConnector: UserAnswersConnector = mock[UserAnswersConnector]
 
   override def beforeEach(): Unit = {
-    reset(mockSessionRepository)
+    reset(mockUserAnswersConnector)
     super.beforeEach()
   }
 
@@ -76,7 +76,7 @@ trait SpecBase
         bind[CbamEoriRequiredAction].to[CbamEoriRequiredActionImpl],
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(injectedParsers, hasEori, cdsEori, cbamEori)),
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[SessionRepository].toInstance(mockSessionRepository)
+        bind[UserAnswersConnector].toInstance(mockUserAnswersConnector)
       )
 
   implicit val hc: HeaderCarrier    = HeaderCarrier()
