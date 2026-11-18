@@ -62,6 +62,23 @@ class NeedToSubscribeCDSControllerSpec extends SpecBase {
       }
     }
 
+    "return 303 and redirect to the no EORI number page when the user has no EORI" in {
+
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswers),
+        hasEori = false
+      ).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.NeedToSubscribeCDSController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual checkDetails.routes.NoEORINumberController.onPageLoad().url
+      }
+    }
+
     "redirect to Journey Recovery for a GET if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()

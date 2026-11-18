@@ -39,13 +39,19 @@ class NeedToSubscribeCDSController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    if (request.cdsEori.isEmpty) {
-      Ok(view(request.userAnswers.expiryDateString))
-    } else {
-      logger.warn(
-        "[NeedToSubscribeCDSController][onPageLoad] - The request contains a EORI. Redirecting to journey recovery"
-      )
-      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    (request.hasEori, request.cdsEori) match {
+      case (false, _)      =>
+        logger.warn(
+          "[NeedToSubscribeCDSController][onPageLoad] - The request contains no EORI. Redirecting to no EORI number page"
+        )
+        Redirect(controllers.checkDetails.routes.NoEORINumberController.onPageLoad())
+      case (true, None)    =>
+        Ok(view(request.userAnswers.expiryDateString))
+      case (true, Some(_)) =>
+        logger.warn(
+          "[NeedToSubscribeCDSController][onPageLoad] - The request contains a EORI. Redirecting to journey recovery"
+        )
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
     }
   }
 }
