@@ -20,15 +20,13 @@ import play.twirl.api.Html
 import utils.ViewTestHelpers
 import views.html.NeedToSubscribeCDSView
 
-import java.time.LocalDate
-
 class NeedToSubscribeCDSViewSpec extends ViewTestHelpers {
 
   "NeedToSubscribeCDS view" should {
-    val answersSavedUntil: LocalDate = LocalDate.of(2026, 12, 17)
+    val dateString = "17 December 2026"
 
     implicit val viewTest: ViewTest = new ViewTest {
-      override val page: Html          = inject[NeedToSubscribeCDSView].apply(answersSavedUntil)
+      override val page: Html          = inject[NeedToSubscribeCDSView].apply(dateString)
       override val pageTitle: String   =
         "You need to subscribe to the Customs Declaration Service before registering for CBAM"
       override val pageHeading: String =
@@ -62,6 +60,17 @@ class NeedToSubscribeCDSViewSpec extends ViewTestHelpers {
     checkContentOnPage(
       "After your subscription is approved, return to this service to finish your registration for CBAM. Your answers will be saved until 17 December 2026.",
       ".govuk-body:nth-of-type(3)"
+    )
+
+    checkContentOnPage(
+      "If your organisation has already subscribed to the Customs Declaration Service, you might be signed in to the wrong account.",
+      ".govuk-body:nth-of-type(4)"
+    )
+
+    checkLinkOnPage(
+      "Sign out and sign in with the account linked to the importer you need to register for CBAM",
+      viewTest.appConfig.signInToStartUrl,
+      ".govuk-body:nth-of-type(5) > a"
     )
 
     checkLinkOnPage(

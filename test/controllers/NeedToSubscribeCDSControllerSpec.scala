@@ -17,33 +17,62 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.NeedToSubscribeCDSView
-
-import java.time.{Instant, LocalDate}
 
 class NeedToSubscribeCDSControllerSpec extends SpecBase {
 
   "NeedToSubscribeCDS Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view when the user has no CDS EORI" in {
 
-      val lastUpdated       = Instant.parse("2026-11-17T10:00:00Z")
-      val answersSavedUntil = LocalDate.of(2026, 12, 17)
-      val userAnswers       = emptyUserAnswers.copy(lastUpdated = lastUpdated)
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val dateString = "11 July 2024"
 
       running(application) {
         val request = FakeRequest(GET, routes.NeedToSubscribeCDSController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[NeedToSubscribeCDSView]
+        val view      = application.injector.instanceOf[NeedToSubscribeCDSView]
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
         status(result)          mustEqual OK
-        contentAsString(result) mustEqual view(answersSavedUntil)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(dateString)(request, messages(application), appConfig).toString
+      }
+    }
+
+    "return 303 and redirect to journey recovery when the user has a CDS EORI" in {
+
+      val application = applicationBuilder(
+        userAnswers = Some(emptyUserAnswers),
+        cdsEori = Some(testEori)
+      ).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.NeedToSubscribeCDSController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "redirect to Journey Recovery for a GET if no existing data is found" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.NeedToSubscribeCDSController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

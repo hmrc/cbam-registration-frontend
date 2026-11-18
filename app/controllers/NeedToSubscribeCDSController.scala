@@ -16,8 +16,10 @@
 
 package controllers
 
-import controllers.actions._
-import java.time.ZoneId
+import config.FrontendAppConfig
+import controllers.actions.*
+import play.api.Logging
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -31,15 +33,19 @@ class NeedToSubscribeCDSController @Inject() (
     requireData: DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     view: NeedToSubscribeCDSView
-) extends FrontendBaseController
-    with I18nSupport {
+)(implicit appConfig: FrontendAppConfig)
+    extends FrontendBaseController
+    with I18nSupport
+    with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val answersSavedUntil = request.userAnswers.lastUpdated
-      .atZone(ZoneId.of("Europe/London"))
-      .toLocalDate
-      .plusDays(30)
-
-    Ok(view(answersSavedUntil))
+    if (request.cdsEori.isEmpty) {
+      Ok(view(request.userAnswers.expiryDateString))
+    } else {
+      logger.warn(
+        "[NeedToSubscribeCDSController][onPageLoad] - The request contains a EORI. Redirecting to journey recovery"
+      )
+      Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+    }
   }
 }
