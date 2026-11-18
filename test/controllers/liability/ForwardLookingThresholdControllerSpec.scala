@@ -17,7 +17,7 @@
 package controllers.liability
 
 import base.SpecBase
-import forms.ForwardLookingThresholdFormProvider
+import forms.liability.ForwardLookingThresholdFormProvider
 import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any

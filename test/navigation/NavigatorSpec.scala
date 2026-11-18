@@ -44,7 +44,11 @@ class NavigatorSpec extends SpecBase {
 
         "the answer is no" in {
           val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, false)
-          navigator.nextPage(ForwardLookingThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-no")
+          navigator.nextPage(
+            ForwardLookingThresholdPage,
+            NormalMode,
+            answers
+          ) mustBe controllers.liability.routes.BackwardLookingThresholdController.onPageLoad(NormalMode)
         }
 
         "there is no expected answer" in {
@@ -58,12 +62,60 @@ class NavigatorSpec extends SpecBase {
 
         "the provided date is valid" in {
           val answers = emptyUserAnswers.withPage(ExpectToExceedThresholdPage, LocalDate.now())
-          navigator.nextPage(ExpectToExceedThresholdPage, NormalMode, answers) mustBe Call("GET", "/todo-valid-date")
+          navigator.nextPage(
+            ExpectToExceedThresholdPage,
+            NormalMode,
+            answers
+          ) mustBe controllers.liability.routes.BackwardLookingThresholdController.onPageLoad(NormalMode)
         }
 
         "there is no date in the user answers" in {
           val answers = emptyUserAnswers
           navigator.nextPage(ExpectToExceedThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
+      }
+
+      "go from the BackwardLookingThreshold page to the next page" when {
+
+        "the answer is yes" in {
+          val answers = emptyUserAnswers
+            .withPage(ForwardLookingThresholdPage, true)
+            .withPage(BackwardLookingThresholdPage, true)
+
+          navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe Call(
+            "GET",
+            "/todo-13"
+          )
+        }
+
+        "the answer is no and the answer for the ForwardLookingThreshold page was yes" in {
+          val answers = emptyUserAnswers
+            .withPage(ForwardLookingThresholdPage, true)
+            .withPage(BackwardLookingThresholdPage, false)
+
+          navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe Call(
+            "GET",
+            "/todo-14"
+          )
+        }
+
+        "the answer is no and the answer for the ForwardLookingThreshold page was no" in {
+          val answers = emptyUserAnswers
+            .withPage(ForwardLookingThresholdPage, false)
+            .withPage(BackwardLookingThresholdPage, false)
+
+          navigator.nextPage(
+            BackwardLookingThresholdPage,
+            NormalMode,
+            answers
+          ) mustBe controllers.liability.routes.DoNotRegisterController.onPageLoad()
+        }
+
+        "there is no expected answer for ForwardLookingThreshold page" in {
+          val answers = emptyUserAnswers.withPage(BackwardLookingThresholdPage, true)
+
+          navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
             .onPageLoad()
         }
       }

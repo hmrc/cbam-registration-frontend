@@ -36,6 +36,7 @@ object ForwardLookingThresholdSummary {
         value = ValueViewModel(value),
         actions = Seq(
           ActionItemViewModel("site.change", routes.ForwardLookingThresholdController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("forwardLookingThreshold.change.hidden"))
         )
       )
     }
