@@ -1,6 +1,7 @@
 package controllers
 
 import controllers.actions._
+import connectors.UserAnswersConnector
 import forms.$className$FormProvider
 import javax.inject.Inject
 import models.Mode
@@ -8,7 +9,6 @@ import navigation.Navigator
 import pages.$className$Page
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.$className$View
 
@@ -16,7 +16,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class $className$Controller @Inject()(
                                       override val messagesApi: MessagesApi,
-                                      sessionRepository: SessionRepository,
+                                      userAnswersConnector: UserAnswersConnector,
                                       navigator: Navigator,
                                       identify: IdentifierAction,
                                       getData: DataRetrievalAction,
@@ -49,7 +49,7 @@ class $className$Controller @Inject()(
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set($className$Page, value))
-            _              <- sessionRepository.set(updatedAnswers)
+            _              <- userAnswersConnector.set(updatedAnswers)
           } yield Redirect(navigator.nextPage($className$Page, mode, updatedAnswers))
       )
   }
