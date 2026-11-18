@@ -64,7 +64,6 @@ class UserAnswersConnector @Inject() (
   def set(userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[Boolean] =
     httpClient
       .put(url"${config.userAnswersSetUrl}")
-      .setHeader("Csrf-Token" -> "nocheck")
       .withBody(Json.toJson(userAnswers))
       .execute[HttpResponse]
       .flatMap { httpResponse =>
@@ -81,7 +80,6 @@ class UserAnswersConnector @Inject() (
   def create(credId: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     httpClient
       .post(url"${config.userAnswersCreateUrl(credId)}")
-      .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
       .flatMap { httpResponse =>
         httpResponse.status match {
@@ -95,7 +93,6 @@ class UserAnswersConnector @Inject() (
   def delete(credId: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     httpClient
       .delete(url"${config.userAnswersDeleteUrl(credId)}")
-      .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
       .flatMap { httpResponse =>
         httpResponse.status match {
@@ -109,7 +106,6 @@ class UserAnswersConnector @Inject() (
   def keepAlive(credId: String)(implicit hc: HeaderCarrier): Future[Boolean] =
     httpClient
       .put(url"${config.userAnswersKeepAliveUrl(credId)}")
-      .setHeader("Csrf-Token" -> "nocheck")
       .execute[HttpResponse]
       .flatMap { httpResponse =>
         httpResponse.status match {
