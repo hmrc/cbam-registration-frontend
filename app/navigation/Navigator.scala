@@ -16,12 +16,12 @@
 
 package navigation
 
-import javax.inject.{Inject, Singleton}
-
-import play.api.mvc.Call
 import controllers.routes
-import pages._
-import models._
+import models.*
+import pages.*
+import play.api.mvc.Call
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class Navigator @Inject() {
@@ -43,10 +43,17 @@ class Navigator @Inject() {
     case BackwardLookingThresholdPage =>
       userAnswers =>
         (userAnswers.get(BackwardLookingThresholdPage), userAnswers.get(ForwardLookingThresholdPage)) match {
-          case (Some(true), Some(_))      => Call("GET", "/todo-13") // TODO screen 13
+          case (Some(true), Some(_))      =>
+            controllers.liability.routes.BackwardLookingDateController.onPageLoad(NormalMode)
           case (Some(false), Some(true))  => Call("GET", "/todo-14") // TODO screen 14
           case (Some(false), Some(false)) => controllers.liability.routes.DoNotRegisterController.onPageLoad()
           case _                          => routes.JourneyRecoveryController.onPageLoad()
+        }
+    case BackwardLookingDatePage      =>
+      userAnswers =>
+        userAnswers.get(BackwardLookingDatePage) match {
+          case Some(_) => Call("GET", "/todo-14") // TODO: Redirect to screen 14 (CDB-505)
+          case _       => routes.JourneyRecoveryController.onPageLoad()
         }
     case _                            => _ => routes.ServiceEntryController.onPageLoad()
   }

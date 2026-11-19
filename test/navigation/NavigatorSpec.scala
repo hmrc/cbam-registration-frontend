@@ -83,10 +83,8 @@ class NavigatorSpec extends SpecBase {
             .withPage(ForwardLookingThresholdPage, true)
             .withPage(BackwardLookingThresholdPage, true)
 
-          navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe Call(
-            "GET",
-            "/todo-13"
-          )
+          navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe
+            controllers.liability.routes.BackwardLookingDateController.onPageLoad(NormalMode)
         }
 
         "the answer is no and the answer for the ForwardLookingThreshold page was yes" in {
@@ -122,6 +120,20 @@ class NavigatorSpec extends SpecBase {
         "there are no expected answers" in {
           val answers = emptyUserAnswers
           navigator.nextPage(BackwardLookingThresholdPage, NormalMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
+      }
+
+      "go from the BackwardLookingDate page to the next page" when {
+
+        "the provided date is valid" in {
+          val answers = emptyUserAnswers.withPage(BackwardLookingDatePage, LocalDate.now())
+          navigator.nextPage(BackwardLookingDatePage, NormalMode, answers) mustBe Call("GET", "/todo-14")
+        }
+
+        "there is no date in the user answers" in {
+          val answers = emptyUserAnswers
+          navigator.nextPage(BackwardLookingDatePage, NormalMode, answers) mustBe routes.JourneyRecoveryController
             .onPageLoad()
         }
       }
