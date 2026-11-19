@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.checkDetails
 
 import base.SpecBase
 import config.FrontendAppConfig
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import views.html.NeedToSubscribeCDSView
+import play.api.test.Helpers.*
+import views.html.checkDetails.NeedToSubscribeCDSView
 
 class NeedToSubscribeCDSControllerSpec extends SpecBase {
 
@@ -58,7 +58,7 @@ class NeedToSubscribeCDSControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
@@ -75,7 +75,7 @@ class NeedToSubscribeCDSControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual checkDetails.routes.NoEORINumberController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.NoEORINumberController.onPageLoad().url
       }
     }
 
@@ -89,7 +89,7 @@ class NeedToSubscribeCDSControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -1,58 +1,60 @@
 # microservice specific routes
 
-->          /hmrc-frontend                               hmrcfrontend.Routes
+->          /hmrc-frontend                                hmrcfrontend.Routes
 
-GET         /                                            controllers.ServiceEntryController.onPageLoad()
+GET         /                                             controllers.ServiceEntryController.onPageLoad()
 
-GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                 controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /language/:lang                               controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET         /refresh-session                             controllers.KeepAliveController.keepAlive()
+GET         /refresh-session                              controllers.KeepAliveController.keepAlive()
 
-GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET         /there-is-a-problem                           controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad()
+GET         /check-your-answers                           controllers.CheckYourAnswersController.onPageLoad()
 
-GET         /account/sign-out-survey                     controllers.auth.AuthController.signOut()
-GET         /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
-GET         /account/signed-out                          controllers.auth.SignedOutController.onPageLoad()
+GET         /account/sign-out-survey                      controllers.auth.AuthController.signOut()
+GET         /account/sign-out                             controllers.auth.AuthController.signOutNoSurvey()
+GET         /account/signed-out                           controllers.auth.SignedOutController.onPageLoad()
 
-GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad()
+GET         /unauthorised                                 controllers.UnauthorisedController.onPageLoad()
 
-GET         /agent                                       controllers.AgentCannotRegisterController.onPageLoad()
-GET         /individual                                  controllers.CannotRegisterIndividualController.onPageLoad()
-GET         /non-admin                                   controllers.AssistantCannotRegisterController.onPageLoad()
-GET         /already-registered                          controllers.AlreadyRegisteredController.onPageLoad()
+GET         /agent                                        controllers.AgentCannotRegisterController.onPageLoad()
+GET         /individual                                   controllers.CannotRegisterIndividualController.onPageLoad()
+GET         /non-admin                                    controllers.AssistantCannotRegisterController.onPageLoad()
+GET         /already-registered                           controllers.AlreadyRegisteredController.onPageLoad()
 
-GET         /date-liability-started                      controllers.liability.LiabilityIntroductionController.onPageLoad()
+GET         /date-liability-started                       controllers.liability.LiabilityIntroductionController.onPageLoad()
 
-GET         /do-not-register                             controllers.liability.DoNotRegisterController.onPageLoad()
+GET         /do-not-register                              controllers.liability.DoNotRegisterController.onPageLoad()
 
-GET         /expect-to-import                            controllers.liability.ForwardLookingThresholdController.onPageLoad(mode: Mode = NormalMode)
-POST        /expect-to-import                            controllers.liability.ForwardLookingThresholdController.onSubmit(mode: Mode = NormalMode)
-GET         /change-expect-to-import                     controllers.liability.ForwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-expect-to-import                     controllers.liability.ForwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
+GET         /expect-to-import                             controllers.liability.ForwardLookingThresholdController.onPageLoad(mode: Mode = NormalMode)
+POST        /expect-to-import                             controllers.liability.ForwardLookingThresholdController.onSubmit(mode: Mode = NormalMode)
+GET         /change-expect-to-import                      controllers.liability.ForwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-expect-to-import                      controllers.liability.ForwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
 
-GET         /date-expect-to-import                       controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = NormalMode)
-POST        /date-expect-to-import                       controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = NormalMode)
-GET         /change-date-expect-to-import                controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-date-expect-to-import                controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = CheckMode)
+GET         /date-expect-to-import                        controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = NormalMode)
+POST        /date-expect-to-import                        controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = NormalMode)
+GET         /change-date-expect-to-import                 controllers.liability.ExpectToExceedThresholdController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-date-expect-to-import                 controllers.liability.ExpectToExceedThresholdController.onSubmit(mode: Mode = CheckMode)
 
-GET         /imported-past-12-months                     controllers.liability.BackwardLookingThresholdController.onPageLoad(mode: Mode = NormalMode)
-POST        /imported-past-12-months                     controllers.liability.BackwardLookingThresholdController.onSubmit(mode: Mode = NormalMode)
-GET         /change-imported-past-12-months              controllers.liability.BackwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-imported-past-12-months              controllers.liability.BackwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
+GET         /imported-past-12-months                      controllers.liability.BackwardLookingThresholdController.onPageLoad(mode: Mode = NormalMode)
+POST        /imported-past-12-months                      controllers.liability.BackwardLookingThresholdController.onSubmit(mode: Mode = NormalMode)
+GET         /change-imported-past-12-months               controllers.liability.BackwardLookingThresholdController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-imported-past-12-months               controllers.liability.BackwardLookingThresholdController.onSubmit(mode: Mode = CheckMode)
 
-GET         /when-imported-past-12-months                controllers.liability.BackwardLookingDateController.onPageLoad(mode: Mode = NormalMode)
-POST        /when-imported-past-12-months                controllers.liability.BackwardLookingDateController.onSubmit(mode: Mode = NormalMode)
-GET         /change-when-imported-past-12-months         controllers.liability.BackwardLookingDateController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-when-imported-past-12-months         controllers.liability.BackwardLookingDateController.onSubmit(mode: Mode = CheckMode)
+GET         /when-imported-past-12-months                 controllers.liability.BackwardLookingDateController.onPageLoad(mode: Mode = NormalMode)
+POST        /when-imported-past-12-months                 controllers.liability.BackwardLookingDateController.onSubmit(mode: Mode = NormalMode)
+GET         /change-when-imported-past-12-months          controllers.liability.BackwardLookingDateController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-when-imported-past-12-months          controllers.liability.BackwardLookingDateController.onSubmit(mode: Mode = CheckMode)
 
-GET         /check-organisation-details                  controllers.checkDetails.CheckOrganisationDetailsController.onPageLoad()
+GET         /confirm-liability-date                       controllers.liability.LiabilityCheckYourAnswersController.onPageLoad()
 
-GET         /sign-in-importer-account                    controllers.checkDetails.CorrectImporterSignInController.onPageLoad()
+GET         /check-organisation-details                   controllers.checkDetails.CheckOrganisationDetailsController.onPageLoad()
 
-GET         /no-eori-number                              controllers.checkDetails.NoEORINumberController.onPageLoad()
+GET         /sign-in-importer-account                     controllers.checkDetails.CorrectImporterSignInController.onPageLoad()
 
-GET         /subscribe-customs-declaration-service        controllers.NeedToSubscribeCDSController.onPageLoad()
+GET         /no-eori-number                               controllers.checkDetails.NoEORINumberController.onPageLoad()
+
+GET         /subscribe-customs-declaration-service        controllers.checkDetails.NeedToSubscribeCDSController.onPageLoad()

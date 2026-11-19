@@ -45,14 +45,15 @@ class Navigator @Inject() {
         (userAnswers.get(BackwardLookingThresholdPage), userAnswers.get(ForwardLookingThresholdPage)) match {
           case (Some(true), Some(_))      =>
             controllers.liability.routes.BackwardLookingDateController.onPageLoad(NormalMode)
-          case (Some(false), Some(true))  => Call("GET", "/todo-14") // TODO screen 14
+          case (Some(false), Some(true))  =>
+            controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
           case (Some(false), Some(false)) => controllers.liability.routes.DoNotRegisterController.onPageLoad()
           case _                          => routes.JourneyRecoveryController.onPageLoad()
         }
     case BackwardLookingDatePage      =>
       userAnswers =>
         userAnswers.get(BackwardLookingDatePage) match {
-          case Some(_) => Call("GET", "/todo-14") // TODO: Redirect to screen 14 (CDB-505)
+          case Some(_) => controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
           case _       => routes.JourneyRecoveryController.onPageLoad()
         }
     case _                            => _ => routes.ServiceEntryController.onPageLoad()

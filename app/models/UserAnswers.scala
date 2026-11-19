@@ -16,13 +16,14 @@
 
 package models
 
+import pages.*
 import play.api.i18n.{Lang, Messages}
 import play.api.libs.json.*
 import queries.{Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import utils.DateTimeFormats
 
-import java.time.Instant
+import java.time.{Instant, LocalDate}
 import java.time.temporal.ChronoUnit.DAYS
 import scala.util.{Failure, Success, Try}
 
@@ -36,6 +37,34 @@ final case class UserAnswers(
     implicit val lang: Lang = messages.lang
     val dateFormatter       = DateTimeFormats.dateTimeFormat()
     dateFormatter.format(lastUpdated.plus(30, DAYS))
+  }
+
+  def liabilityDetails: Option[LiabilityDetails] = {
+
+    def adjustBackwardLookDate(date: LocalDate): LocalDate =
+      if (date.getDayOfMonth == 1) date
+      else date.withDayOfMonth(1).plusMonths(1)
+
+    (this.get(ForwardLookingThresholdPage), this.get(BackwardLookingThresholdPage)) match {
+      case (Some(true), Some(false)) =>
+        this.get(ExpectToExceedThresholdPage).map { date =>
+          LiabilityDetails(date, isForwardLookEarliest = true)
+        }
+      case (Some(false), Some(true)) =>
+        this.get(BackwardLookingDatePage).map { date =>
+          LiabilityDetails(adjustBackwardLookDate(date), isForwardLookEarliest = false)
+        }
+      case (Some(true), Some(true))  =>
+        (this.get(ExpectToExceedThresholdPage), this.get(BackwardLookingDatePage)) match {
+          case (Some(forwardLookDate), Some(backwardLookDate)) =>
+            val adjustedBackwardLookDate = adjustBackwardLookDate(backwardLookDate)
+            val isForwardLookEarliest    = !forwardLookDate.isAfter(adjustedBackwardLookDate)
+            val liabilityStartDate       = if (isForwardLookEarliest) forwardLookDate else adjustedBackwardLookDate
+            Some(LiabilityDetails(liabilityStartDate, isForwardLookEarliest))
+          case _                                               => None
+        }
+      case _                         => None
+    }
   }
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
