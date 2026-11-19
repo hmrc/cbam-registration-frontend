@@ -17,6 +17,8 @@
 package common
 
 import models.UserAnswers
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.*
 
 import java.time.{Clock, Instant, ZoneId}
 
@@ -28,5 +30,15 @@ trait TestData {
   val testEori: String   = "GB12345612345678"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(testCredId, lastUpdated = Instant.now(clock))
+
+  val testSummaryList: SummaryList = SummaryList(
+    Seq(
+      SummaryListRow(
+        Key(Text("Question")),
+        Value(Text("Answer")),
+        actions = Some(Actions(items = Seq(ActionItem(content = Text("Change")))))
+      )
+    )
+  )
 
 }
