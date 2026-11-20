@@ -16,12 +16,17 @@
 
 package navigation
 
-import play.api.mvc.Call
-import pages._
 import models.{Mode, UserAnswers}
+import org.scalatest.Assertions.fail
+import pages.*
+import play.api.mvc.Call
 
-class FakeNavigator(desiredRoute: Call) extends Navigator {
+class FakeNavigator(desiredRoute: Call, expectedHasAnswerChanged: Boolean = true) extends Navigator {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean): Call =
+    if (hasAnswerChanged == expectedHasAnswerChanged) {
+      desiredRoute
+    } else {
+      fail(s"Expected hasAnswerChanged to be $expectedHasAnswerChanged")
+    }
 }

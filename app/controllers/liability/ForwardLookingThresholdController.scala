@@ -64,10 +64,11 @@ class ForwardLookingThresholdController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
+            val hasChanged = !request.userAnswers.get(ForwardLookingThresholdPage).contains(value)
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(ForwardLookingThresholdPage, value))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ForwardLookingThresholdPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ForwardLookingThresholdPage, mode, updatedAnswers, hasChanged))
         )
   }
 }
