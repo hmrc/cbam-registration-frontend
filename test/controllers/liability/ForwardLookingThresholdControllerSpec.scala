@@ -20,15 +20,16 @@ import base.SpecBase
 import forms.liability.ForwardLookingThresholdFormProvider
 import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import pages.ForwardLookingThresholdPage
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
+import pages.{ExpectToExceedThresholdPage, ForwardLookingThresholdPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.liability.ForwardLookingThresholdView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class ForwardLookingThresholdControllerSpec extends SpecBase {
@@ -113,6 +114,58 @@ class ForwardLookingThresholdControllerSpec extends SpecBase {
 
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+      }
+    }
+
+    "redirect to the next page with hasAnswerChanged = false when the answer has not changed" in {
+      val userAnswers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, false)
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute, expectedHasAnswerChanged = false)))
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, forwardLookingThresholdRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswers))(any())
+      }
+    }
+
+    "redirect to the next page with hasAnswerChanged = true and clear the forward looking date when the answer changes from Yes to No" in {
+      val userAnswers = emptyUserAnswers
+        .withPage(ForwardLookingThresholdPage, true)
+        .withPage(ExpectToExceedThresholdPage, LocalDate.now(clock))
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, forwardLookingThresholdRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(
+          eqTo(emptyUserAnswers.withPage(ForwardLookingThresholdPage, false))
+        )(any())
       }
     }
 

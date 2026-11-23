@@ -16,11 +16,21 @@
 
 package pages
 
+import models.UserAnswers
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case object ForwardLookingThresholdPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "forwardLookingThreshold"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    if (value.contains(false)) {
+      userAnswers.remove(ExpectToExceedThresholdPage)
+    } else {
+      super.cleanup(value, userAnswers)
+    }
 }

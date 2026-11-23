@@ -146,17 +146,155 @@ class NavigatorSpec extends SpecBase {
 
     "in Check mode" must {
 
-      "go from the ForwardLookingThreshold page to CheckYourAnswers" in {
+      "go from the ForwardLookingThreshold page to the next page" when {
 
-        val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
-        navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe routes.CheckYourAnswersController
-          .onPageLoad()
+        "the answer has not changed" in {
+          val answers = emptyUserAnswers
+            .withPage(ForwardLookingThresholdPage, true)
+            .withPage(ExpectToExceedThresholdPage, LocalDate.now())
+            .withPage(BackwardLookingThresholdPage, true)
+            .withPage(BackwardLookingDatePage, LocalDate.now())
+
+          navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers, hasAnswerChanged = false) mustBe
+            controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+        }
+
+        "the answer has changed" when {
+          "the answer is yes" in {
+            val answers = emptyUserAnswers
+              .withPage(ForwardLookingThresholdPage, true)
+              .withPage(BackwardLookingThresholdPage, true)
+              .withPage(BackwardLookingDatePage, LocalDate.now())
+
+            navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe
+              controllers.liability.routes.ExpectToExceedThresholdController.onPageLoad(CheckMode)
+          }
+
+          "the answer is no and the answer for the BackwardLookingThreshold page was yes" in {
+            val answers = emptyUserAnswers
+              .withPage(ForwardLookingThresholdPage, false)
+              .withPage(BackwardLookingThresholdPage, true)
+              .withPage(BackwardLookingDatePage, LocalDate.now())
+
+            navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe
+              controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+          }
+
+          "the answer is no and the answer for the BackwardLookingThreshold page was no" in {
+            val answers = emptyUserAnswers
+              .withPage(ForwardLookingThresholdPage, false)
+              .withPage(BackwardLookingThresholdPage, false)
+
+            navigator.nextPage(ForwardLookingThresholdPage, CheckMode, answers) mustBe
+              controllers.liability.routes.DoNotRegisterController.onPageLoad()
+          }
+
+          "there is no expected answer for the BackwardLookingThreshold page" in {
+            val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
+
+            navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers) mustBe routes.JourneyRecoveryController
+              .onPageLoad()
+          }
+
+          "there is no expected answer for the ForwardLookingThreshold page" in {
+            val answers = emptyUserAnswers.withPage(BackwardLookingThresholdPage, true)
+            navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers) mustBe routes.JourneyRecoveryController
+              .onPageLoad()
+          }
+        }
       }
 
-      "go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
+      "go from the ExpectToExceedThreshold page to the next page" when {
+
+        "the provided date is valid" in {
+          val answers = emptyUserAnswers.withPage(ExpectToExceedThresholdPage, LocalDate.now())
+          navigator.nextPage(ExpectToExceedThresholdPage, CheckMode, answers) mustBe
+            controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+        }
+
+        "there is no date in the user answers" in {
+          val answers = emptyUserAnswers
+          navigator.nextPage(ExpectToExceedThresholdPage, CheckMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
+      }
+
+      "go from the BackwardLookingThreshold page to the next page" when {
+
+        "the answer has not changed" in {
+          val answers = emptyUserAnswers
+            .withPage(ForwardLookingThresholdPage, true)
+            .withPage(ExpectToExceedThresholdPage, LocalDate.now())
+            .withPage(BackwardLookingThresholdPage, true)
+            .withPage(BackwardLookingDatePage, LocalDate.now())
+
+          navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers, hasAnswerChanged = false) mustBe
+            controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+        }
+
+        "the answer has changed" when {
+          "the answer is yes" in {
+            val answers = emptyUserAnswers
+              .withPage(ForwardLookingThresholdPage, true)
+              .withPage(BackwardLookingThresholdPage, true)
+              .withPage(BackwardLookingDatePage, LocalDate.now())
+
+            navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers) mustBe
+              controllers.liability.routes.BackwardLookingDateController.onPageLoad(CheckMode)
+          }
+
+          "the answer is no and the answer for the ForwardLookingThreshold page was yes" in {
+            val answers = emptyUserAnswers
+              .withPage(ForwardLookingThresholdPage, true)
+              .withPage(ExpectToExceedThresholdPage, LocalDate.now())
+              .withPage(BackwardLookingThresholdPage, false)
+
+            navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers) mustBe
+              controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+          }
+
+          "the answer is no and the answer for the ForwardLookingThreshold page was no" in {
+            val answers = emptyUserAnswers
+              .withPage(ForwardLookingThresholdPage, false)
+              .withPage(BackwardLookingThresholdPage, false)
+
+            navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers) mustBe
+              controllers.liability.routes.DoNotRegisterController.onPageLoad()
+          }
+
+          "there is no expected answer for the ForwardLookingThreshold page" in {
+            val answers = emptyUserAnswers.withPage(BackwardLookingThresholdPage, true)
+            navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers) mustBe routes.JourneyRecoveryController
+              .onPageLoad()
+          }
+
+          "there is no expected answer for the BackwardLookingThresholdPage page" in {
+            val answers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)
+            navigator.nextPage(BackwardLookingThresholdPage, CheckMode, answers) mustBe routes.JourneyRecoveryController
+              .onPageLoad()
+          }
+        }
+      }
+
+      "go from the BackwardLookingDate page to the next page" when {
+
+        "the provided date is valid" in {
+          val answers = emptyUserAnswers.withPage(BackwardLookingDatePage, LocalDate.now())
+          navigator.nextPage(BackwardLookingDatePage, CheckMode, answers) mustBe
+            controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+        }
+
+        "there is no date in the user answers" in {
+          val answers = emptyUserAnswers
+          navigator.nextPage(BackwardLookingDatePage, CheckMode, answers) mustBe routes.JourneyRecoveryController
+            .onPageLoad()
+        }
+      }
+
+      "go from a page that doesn't exist in the edit route map to journey recovery" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe routes.CheckYourAnswersController
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe routes.JourneyRecoveryController
           .onPageLoad()
       }
     }

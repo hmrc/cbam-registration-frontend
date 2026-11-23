@@ -20,10 +20,9 @@ import base.SpecBase
 import forms.liability.BackwardLookingThresholdFormProvider
 import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.BackwardLookingThresholdPage
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{times, verify, when}
+import pages.{BackwardLookingDatePage, BackwardLookingThresholdPage}
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -31,9 +30,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.liability.BackwardLookingThresholdView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
-class BackwardLookingThresholdControllerSpec extends SpecBase with MockitoSugar {
+class BackwardLookingThresholdControllerSpec extends SpecBase {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -118,6 +118,58 @@ class BackwardLookingThresholdControllerSpec extends SpecBase with MockitoSugar 
 
         status(result)          mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+      }
+    }
+
+    "redirect to the next page with hasAnswerChanged = false when the answer has not changed" in {
+      val userAnswers = emptyUserAnswers.withPage(BackwardLookingThresholdPage, false)
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute, expectedHasAnswerChanged = false)))
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, backwardLookingThresholdRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswers))(any())
+      }
+    }
+
+    "redirect to the next page with hasAnswerChanged = true and clear the backward looking date when the answer changes from Yes to No" in {
+      val userAnswers = emptyUserAnswers
+        .withPage(BackwardLookingThresholdPage, true)
+        .withPage(BackwardLookingDatePage, LocalDate.now(clock))
+
+      when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, backwardLookingThresholdRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result)                 mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+
+        verify(mockUserAnswersConnector, times(1)).set(
+          eqTo(emptyUserAnswers.withPage(BackwardLookingThresholdPage, false))
+        )(any())
       }
     }
 
