@@ -14,44 +14,38 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.liability
 
-import config.FrontendAppConfig
 import controllers.actions.*
 import play.api.Logging
-
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.NeedToSubscribeCDSView
+import utils.liability.LiabilityCheckYourAnswersHelper
+import views.html.liability.LiabilityCheckYourAnswersView
 
-class NeedToSubscribeCDSController @Inject() (
+import javax.inject.Inject
+
+class LiabilityCheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
+    helper: LiabilityCheckYourAnswersHelper,
     val controllerComponents: MessagesControllerComponents,
-    view: NeedToSubscribeCDSView
-)(implicit appConfig: FrontendAppConfig)
-    extends FrontendBaseController
+    view: LiabilityCheckYourAnswersView
+) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    (request.hasEori, request.cdsEori) match {
-      case (false, _)      =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    helper.getSummaryList(request.userAnswers) match {
+      case Some(summaryList) => Ok(view(summaryList))
+      case None              =>
         logger.warn(
-          "[NeedToSubscribeCDSController][onPageLoad] - The request contains no EORI. Redirecting to no EORI number page"
+          "[LiabilityCheckYourAnswersController][onPageLoad] Unable to create summary list due to missing answers"
         )
-        Redirect(controllers.checkDetails.routes.NoEORINumberController.onPageLoad())
-      case (true, None)    =>
-        Ok(view(request.userAnswers.expiryDateString))
-      case (true, Some(_)) =>
-        logger.warn(
-          "[NeedToSubscribeCDSController][onPageLoad] - The request contains a EORI. Redirecting to journey recovery"
-        )
-        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())
+        Redirect(controllers.routes.JourneyRecoveryController.onPageLoad().url)
     }
   }
 }

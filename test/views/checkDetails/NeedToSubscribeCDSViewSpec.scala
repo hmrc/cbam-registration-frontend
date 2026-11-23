@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package views
+package views.checkDetails
 
 import play.twirl.api.Html
 import utils.ViewTestHelpers
-import views.html.NeedToSubscribeCDSView
+import views.html.checkDetails.NeedToSubscribeCDSView
 
 class NeedToSubscribeCDSViewSpec extends ViewTestHelpers {
 

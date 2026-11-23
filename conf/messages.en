@@ -8,6 +8,7 @@ site.yes = Yes
 site.continue = Continue
 site.saveAndContinue = Save and continue
 site.saveAndComeBackLater = Save and come back later
+site.confirm = Confirm
 site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
@@ -101,12 +102,12 @@ forwardLookingThreshold.change.hidden = whether you expect to import CBAM goods 
 expectToExceedThreshold.title = When did you first expect to import CBAM goods with a total value of £50,000 or more?
 expectToExceedThreshold.heading = When did you first expect to import CBAM goods with a total value of £50,000 or more?
 expectToExceedThreshold.hint = For example, 27 3 2027
-expectToExceedThreshold.checkYourAnswersLabel = When did you first expect to import CBAM goods with with a total value of £50,000 or more?
+expectToExceedThreshold.checkYourAnswersLabel = When did you first expect to import CBAM goods with a total value of £50,000 or more?
 expectToExceedThreshold.error.required.all = Enter date you first expected to import CBAM goods with a total value of £50,000 or more
 expectToExceedThreshold.error.required.two = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0} and {1}
 expectToExceedThreshold.error.required = Date you first expected to import CBAM goods with a total value of £50,000 or more must include a {0}
 expectToExceedThreshold.error.invalid = Date you first expected to import CBAM goods with a total value of £50,000 or more must be a real date
-expectToExceedThreshold.change.hidden = when you first expected to import CBAM goods with with a total value of £50,000 or more
+expectToExceedThreshold.change.hidden = when you first expected to import CBAM goods with a total value of £50,000 or more
 expectToExceedThreshold.error.beforeJan27 = Date you first expected to import CBAM goods with a total value of £50,000 or more must be the same as or after 1 January 2027
 expectToExceedThreshold.error.notAfterToday = Date you first expected to import CBAM goods with a total value of £50,000 or more must be today or in the past
 
@@ -128,6 +129,9 @@ backwardLookingDate.error.beforeJan27 = Date your imports of CBAM goods reached 
 backwardLookingDate.error.notAfterToday = Date your imports of CBAM goods reached £50,000 must be today or in the past
 backwardLookingDate.checkYourAnswersLabel = When did your imports of CBAM goods reach £50,000 or more within the past 12 months?
 backwardLookingDate.change.hidden = when your imports of CBAM goods reached £50,000 or more within the past 12 months
+
+liabilityCheckYourAnswers.title = Confirm liability start date
+liabilityCheckYourAnswers.heading = Confirm liability start date
 
 checkOrganisationDetails.title = We need to check your organisation’s details
 checkOrganisationDetails.heading = We need to check your organisation’s details
