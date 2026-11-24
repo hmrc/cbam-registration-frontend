@@ -162,3 +162,10 @@ needToSubscribeCDS.p3 = After your subscription is approved, return to this serv
 needToSubscribeCDS.p4 = If your organisation has already subscribed to the Customs Declaration Service, you might be signed in to the wrong account.
 needToSubscribeCDS.signOutLink = Sign out and sign in with the account linked to the importer you need to register for CBAM
 needToSubscribeCDS.button = Subscribe to Customs Declaration Service
+
+sectorsToImport.title = Which CBAM sectors do you expect to import goods from?
+sectorsToImport.heading = Which CBAM sectors do you expect to import goods from?
+sectorsToImport.hint = Sectors you do not select will be recorded as having 0kg of expected imports
+sectorsToImport.checkYourAnswersLabel = Which CBAM sectors do you expect to import goods from?
+sectorsToImport.error.required = Select which CBAM sectors you expect to import goods from
+sectorsToImport.change.hidden = which CBAM sectors you expect to import goods from
