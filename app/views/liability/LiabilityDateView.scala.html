@@ -19,7 +19,8 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        link: components.Link
 )
 
 @(
@@ -51,6 +52,15 @@
             <p class="govuk-body" id="threshold-reached">@Html(messages("liabilityDate.backwardLook.p1", bold(reachedDate)))</p>
 
             <p class="govuk-body" id="liability-start">@Html(messages("liabilityDate.backwardLook.p2", bold(liabilityStartDate)))</p>
+
+            <p class="govuk-body" id="guidance">
+                @link(
+                    href = "https://www.gov.uk/guidance/work-out-the-date-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam",
+                    key = "liabilityDate.backwardLook.linkText",
+                    newTab = true,
+                    fullStop = true
+                )
+            </p>
         }
     }
 
@@ -61,7 +71,7 @@
     }
 
     @govukButton(
-        ButtonViewModel(messages("site.continue")).withAttribute("id" -> "continue")
+        ButtonViewModel(messages("site.saveAndContinue")).withAttribute("id" -> "continue")
         .asLink(controllers.checkDetails.routes.CheckOrganisationDetailsController.onPageLoad().url)
     )
 }

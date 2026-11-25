@@ -26,6 +26,9 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
 
   private val title: String = "Liability start date for CBAM"
 
+  private val guidanceUrl: String =
+    "https://www.gov.uk/guidance/work-out-the-date-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam"
+
   private val checkOrganisationDetailsUrl: String =
     controllers.checkDetails.routes.CheckOrganisationDetailsController.onPageLoad().url
 
@@ -82,8 +85,9 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
         checkContentOnPage("1 May 2026", ".govuk-body:nth-of-type(3) > strong")
 
         checkElementDoesNotExist("#threshold-reached")
+        checkElementDoesNotExist("#guidance")
 
-        checkLinkOnPage("Continue", checkOrganisationDetailsUrl, ".govuk-button")
+        checkLinkOnPage("Save and continue", checkOrganisationDetailsUrl, ".govuk-button")
       }
 
       "the registration is after the deadline" should {
@@ -150,13 +154,20 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
 
         checkContentOnPage(
           "You must submit your registration by 1 March 2027. If your submission is late, you may be charged a penalty.",
-          ".govuk-body:nth-of-type(3)"
+          ".govuk-body:nth-of-type(4)"
         )
-        checkContentOnPage("1 March 2027", ".govuk-body:nth-of-type(3) > strong")
+        checkContentOnPage("1 March 2027", ".govuk-body:nth-of-type(4) > strong")
+
+        checkLinkOnPage(
+          "Find out more information about when you are liable to register for CBAM (opens in new tab)",
+          guidanceUrl,
+          ".govuk-body:nth-of-type(3) > a"
+        )
+        checkAttribute("target", "_blank", ".govuk-body:nth-of-type(3) > a")
 
         checkElementDoesNotExist("#forward-look-explanation")
 
-        checkLinkOnPage("Continue", checkOrganisationDetailsUrl, ".govuk-button")
+        checkLinkOnPage("Save and continue", checkOrganisationDetailsUrl, ".govuk-button")
       }
 
       "the registration is after the deadline" should {
@@ -171,9 +182,9 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
 
         checkContentOnPage(
           "Your deadline to submit your CBAM registration was 1 March 2027. Submit your registration as soon as possible. Late submissions may be charged a penalty.",
-          ".govuk-body:nth-of-type(3)"
+          ".govuk-body:nth-of-type(4)"
         )
-        checkContentOnPage("1 March 2027", ".govuk-body:nth-of-type(3) > strong")
+        checkContentOnPage("1 March 2027", ".govuk-body:nth-of-type(4) > strong")
       }
     }
 
