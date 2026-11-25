@@ -17,7 +17,7 @@
 package controllers.liability
 
 import controllers.actions._
-import pages.{BackwardLookingDatePage, ExpectToExceedThresholdPage}
+import pages.BackwardLookingDatePage
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -39,26 +39,23 @@ class LiabilityDateController @Inject() (
     with Logging {
 
   def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val forwardLookDate  = request.userAnswers.get(ExpectToExceedThresholdPage)
     val backwardLookDate = request.userAnswers.get(BackwardLookingDatePage)
 
-    val isForwardLook: Boolean = (forwardLookDate, backwardLookDate) match {
-      case (Some(_), None)                         => true
-      case (Some(forwardDate), Some(backwardDate)) => backwardDate.withDayOfMonth(1).isAfter(forwardDate)
-      case _                                       => false
-    }
-
-    val liabilityStartDate: Option[LocalDate] =
-      if (isForwardLook) forwardLookDate
-      else backwardLookDate.map(_.withDayOfMonth(1))
-
-    liabilityStartDate match {
-      case Some(startDate) =>
-        val registrationDeadline = startDate.plusMonths(1)
+    request.userAnswers.liabilityDetails match {
+      case Some(details) =>
+        val registrationDeadline = details.liabilityStartDate.plusMonths(1)
         val isLate               = LocalDate.now(ZoneId.of("Europe/London")).isAfter(registrationDeadline)
 
-        Ok(view(isForwardLook, startDate, backwardLookDate, registrationDeadline, isLate))
-      case None            =>
+        Ok(
+          view(
+            details.isForwardLookEarliest,
+            details.liabilityStartDate,
+            backwardLookDate,
+            registrationDeadline,
+            isLate
+          )
+        )
+      case _             =>
         logger.warn(
           "[LiabilityDateController][onPageLoad] Unable to determine liability start date due to missing answers"
         )

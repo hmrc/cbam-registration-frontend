@@ -71,7 +71,6 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
           "Your organisation’s liability for CBAM started on 1 April 2026.",
           ".govuk-body:nth-of-type(1)"
         )
-        checkContentOnPage("1 April 2026", ".govuk-body:nth-of-type(1) > strong")
 
         checkContentOnPage(
           "This is the date you first expected to import £50,000 or more worth of CBAM goods into the UK within the next 30 days.",
@@ -82,12 +81,12 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
           "You must submit your registration by 1 May 2026. If your submission is late, you may be charged a penalty.",
           ".govuk-body:nth-of-type(3)"
         )
-        checkContentOnPage("1 May 2026", ".govuk-body:nth-of-type(3) > strong")
 
         checkElementDoesNotExist("#threshold-reached")
         checkElementDoesNotExist("#guidance")
 
         checkLinkOnPage("Save and continue", checkOrganisationDetailsUrl, ".govuk-button")
+        checkLinkOnPage("Save and come back later", "/todo-answers-saved", ".govuk-button-group > .govuk-link")
       }
 
       "the registration is after the deadline" should {
@@ -104,7 +103,6 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
           "Your deadline to submit your CBAM registration was 1 May 2026. Submit your registration as soon as possible. Late submissions may be charged a penalty.",
           ".govuk-body:nth-of-type(3)"
         )
-        checkContentOnPage("1 May 2026", ".govuk-body:nth-of-type(3) > strong")
       }
 
       "a BackwardLookingDate date is also present" should {
@@ -132,9 +130,9 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
         implicit val viewTest: ViewTest =
           viewTestFor(
             isForwardLook = false,
-            liabilityStartDate = LocalDate.of(2027, 2, 1),
+            liabilityStartDate = LocalDate.of(2027, 3, 1),
             backwardLookDate = Some(LocalDate.of(2027, 2, 15)),
-            registrationDeadline = LocalDate.of(2027, 3, 1),
+            registrationDeadline = LocalDate.of(2027, 4, 1),
             isLate = false
           )
 
@@ -144,19 +142,16 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
           "Your imports of CBAM goods reached £50,000 or more on 15 February 2027.",
           ".govuk-body:nth-of-type(1)"
         )
-        checkContentOnPage("15 February 2027", ".govuk-body:nth-of-type(1) > strong")
 
         checkContentOnPage(
-          "This means your liability for CBAM started on 1 February 2027 because CBAM is tested on the first day of the month.",
+          "This means your liability for CBAM started on 1 March 2027 because CBAM is tested on the first day of the month.",
           ".govuk-body:nth-of-type(2)"
         )
-        checkContentOnPage("1 February 2027", ".govuk-body:nth-of-type(2) > strong")
 
         checkContentOnPage(
-          "You must submit your registration by 1 March 2027. If your submission is late, you may be charged a penalty.",
+          "You must submit your registration by 1 April 2027. If your submission is late, you may be charged a penalty.",
           ".govuk-body:nth-of-type(4)"
         )
-        checkContentOnPage("1 March 2027", ".govuk-body:nth-of-type(4) > strong")
 
         checkLinkOnPage(
           "Find out more information about when you are liable to register for CBAM (opens in new tab)",
@@ -168,23 +163,23 @@ class LiabilityDateViewSpec extends ViewTestHelpers {
         checkElementDoesNotExist("#forward-look-explanation")
 
         checkLinkOnPage("Save and continue", checkOrganisationDetailsUrl, ".govuk-button")
+        checkLinkOnPage("Save and come back later", "/todo-answers-saved", ".govuk-button-group > .govuk-link")
       }
 
       "the registration is after the deadline" should {
         implicit val viewTest: ViewTest =
           viewTestFor(
             isForwardLook = false,
-            liabilityStartDate = LocalDate.of(2027, 2, 1),
+            liabilityStartDate = LocalDate.of(2027, 3, 1),
             backwardLookDate = Some(LocalDate.of(2027, 2, 15)),
-            registrationDeadline = LocalDate.of(2027, 3, 1),
+            registrationDeadline = LocalDate.of(2027, 4, 1),
             isLate = true
           )
 
         checkContentOnPage(
-          "Your deadline to submit your CBAM registration was 1 March 2027. Submit your registration as soon as possible. Late submissions may be charged a penalty.",
+          "Your deadline to submit your CBAM registration was 1 April 2027. Submit your registration as soon as possible. Late submissions may be charged a penalty.",
           ".govuk-body:nth-of-type(4)"
         )
-        checkContentOnPage("1 March 2027", ".govuk-body:nth-of-type(4) > strong")
       }
     }
 

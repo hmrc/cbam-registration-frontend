@@ -35,23 +35,19 @@
     DateTimeFormats.dateTimeFormat()(messages.lang).format(date)
 }
 
-@bold(date: LocalDate) = @{
-    s"<strong>${formatDate(date)}</strong>"
-}
-
 @layout(pageTitle = titleNoForm(messages("liabilityDate.title"))) {
 
     <h1 class="govuk-heading-l">@messages("liabilityDate.heading")</h1>
 
     @if(isForwardLook) {
-        <p class="govuk-body" id="liability-start">@Html(messages("liabilityDate.forwardLook.p1", bold(liabilityStartDate)))</p>
+        <p class="govuk-body" id="liability-start">@messages("liabilityDate.forwardLook.p1", formatDate(liabilityStartDate))</p>
 
         <p class="govuk-body" id="forward-look-explanation">@messages("liabilityDate.forwardLook.p2")</p>
     } else {
         @backwardLookDate.map { reachedDate =>
-            <p class="govuk-body" id="threshold-reached">@Html(messages("liabilityDate.backwardLook.p1", bold(reachedDate)))</p>
+            <p class="govuk-body" id="threshold-reached">@messages("liabilityDate.backwardLook.p1", formatDate(reachedDate))</p>
 
-            <p class="govuk-body" id="liability-start">@Html(messages("liabilityDate.backwardLook.p2", bold(liabilityStartDate)))</p>
+            <p class="govuk-body" id="liability-start">@messages("liabilityDate.backwardLook.p2", formatDate(liabilityStartDate))</p>
 
             <p class="govuk-body" id="guidance">
                 @link(
@@ -65,13 +61,19 @@
     }
 
     @if(isLate) {
-        <p class="govuk-body" id="deadline">@Html(messages("liabilityDate.deadline.late", bold(registrationDeadline)))</p>
+        <p class="govuk-body" id="deadline">@messages("liabilityDate.deadline.late", formatDate(registrationDeadline))</p>
     } else {
-        <p class="govuk-body" id="deadline">@Html(messages("liabilityDate.deadline.onTime", bold(registrationDeadline)))</p>
+        <p class="govuk-body" id="deadline">@messages("liabilityDate.deadline.onTime", formatDate(registrationDeadline))</p>
     }
 
-    @govukButton(
-        ButtonViewModel(messages("site.saveAndContinue")).withAttribute("id" -> "continue")
-        .asLink(controllers.checkDetails.routes.CheckOrganisationDetailsController.onPageLoad().url)
-    )
+    <div class="govuk-button-group">
+        @govukButton(
+            ButtonViewModel(messages("site.saveAndContinue")).withAttribute("id" -> "continue")
+            .asLink(controllers.checkDetails.routes.CheckOrganisationDetailsController.onPageLoad().url)
+        )
+        @link(
+            href = "/todo-answers-saved",
+            key = messages("site.saveAndComeBackLater")
+        )
+    </div>
 }

@@ -32,6 +32,25 @@ class LiabilityDateControllerSpec extends SpecBase {
   private val today: LocalDate            = LocalDate.now(ZoneId.of("Europe/London"))
   private val firstOfThisMonth: LocalDate = today.withDayOfMonth(1)
 
+  private def forwardLookOnly(forwardLookDate: LocalDate): UserAnswers =
+    emptyUserAnswers
+      .withPage(ForwardLookingThresholdPage, true)
+      .withPage(ExpectToExceedThresholdPage, forwardLookDate)
+      .withPage(BackwardLookingThresholdPage, false)
+
+  private def backwardLookOnly(backwardLookDate: LocalDate): UserAnswers =
+    emptyUserAnswers
+      .withPage(ForwardLookingThresholdPage, false)
+      .withPage(BackwardLookingThresholdPage, true)
+      .withPage(BackwardLookingDatePage, backwardLookDate)
+
+  private def bothLooks(forwardLookDate: LocalDate, backwardLookDate: LocalDate): UserAnswers =
+    emptyUserAnswers
+      .withPage(ForwardLookingThresholdPage, true)
+      .withPage(ExpectToExceedThresholdPage, forwardLookDate)
+      .withPage(BackwardLookingThresholdPage, true)
+      .withPage(BackwardLookingDatePage, backwardLookDate)
+
   private def checkPage(
       userAnswers: UserAnswers,
       expectedIsForwardLook: Boolean,
@@ -60,6 +79,19 @@ class LiabilityDateControllerSpec extends SpecBase {
     }
   }
 
+  private def checkRedirectsToJourneyRecovery(userAnswers: Option[UserAnswers]): Unit = {
+    val application = applicationBuilder(userAnswers = userAnswers).build()
+
+    running(application) {
+      val request = FakeRequest(GET, liabilityDateRoute)
+
+      val result = route(application, request).value
+
+      status(result)                 mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+    }
+  }
+
   "LiabilityDate Controller" when {
 
     "onPageLoad" must {
@@ -69,13 +101,8 @@ class LiabilityDateControllerSpec extends SpecBase {
         "only the ExpectToExceedThreshold date is present" in {
           val forwardLookDate = today.minusDays(5)
 
-          val userAnswers = emptyUserAnswers
-            .withPage(ForwardLookingThresholdPage, true)
-            .withPage(ExpectToExceedThresholdPage, forwardLookDate)
-            .withPage(BackwardLookingThresholdPage, false)
-
           checkPage(
-            userAnswers,
+            forwardLookOnly(forwardLookDate),
             expectedIsForwardLook = true,
             expectedLiabilityStartDate = forwardLookDate,
             expectedBackwardLookDate = None,
@@ -86,16 +113,10 @@ class LiabilityDateControllerSpec extends SpecBase {
 
         "both dates are present and the ExpectToExceedThreshold date is earlier than the BackwardLookingDate liability start date" in {
           val forwardLookDate  = firstOfThisMonth.minusMonths(3)
-          val backwardLookDate = firstOfThisMonth.minusMonths(2).plusDays(10)
-
-          val userAnswers = emptyUserAnswers
-            .withPage(ForwardLookingThresholdPage, true)
-            .withPage(ExpectToExceedThresholdPage, forwardLookDate)
-            .withPage(BackwardLookingThresholdPage, true)
-            .withPage(BackwardLookingDatePage, backwardLookDate)
+          val backwardLookDate = firstOfThisMonth.minusMonths(3).plusDays(10)
 
           checkPage(
-            userAnswers,
+            bothLooks(forwardLookDate, backwardLookDate),
             expectedIsForwardLook = true,
             expectedLiabilityStartDate = forwardLookDate,
             expectedBackwardLookDate = Some(backwardLookDate),
@@ -103,21 +124,57 @@ class LiabilityDateControllerSpec extends SpecBase {
             expectedIsLate = true
           )
         }
+
+        "the raw BackwardLookingDate date is earlier, but the ExpectToExceedThreshold date is earlier than the BackwardLookingDate liability start date" in {
+          val forwardLookDate  = firstOfThisMonth.minusMonths(2).plusDays(19)
+          val backwardLookDate = firstOfThisMonth.minusMonths(2).plusDays(14)
+
+          checkPage(
+            bothLooks(forwardLookDate, backwardLookDate),
+            expectedIsForwardLook = true,
+            expectedLiabilityStartDate = forwardLookDate,
+            expectedBackwardLookDate = Some(backwardLookDate),
+            expectedDeadline = forwardLookDate.plusMonths(1),
+            expectedIsLate = true
+          )
+        }
+
+        "both dates are present and the liability start dates are the same" in {
+          val forwardLookDate  = firstOfThisMonth
+          val backwardLookDate = firstOfThisMonth.minusMonths(1).plusDays(14)
+
+          checkPage(
+            bothLooks(forwardLookDate, backwardLookDate),
+            expectedIsForwardLook = true,
+            expectedLiabilityStartDate = firstOfThisMonth,
+            expectedBackwardLookDate = Some(backwardLookDate),
+            expectedDeadline = firstOfThisMonth.plusMonths(1),
+            expectedIsLate = false
+          )
+        }
       }
 
       "return OK and the backward looking content" when {
 
-        "only the BackwardLookingDate date is present" in {
-          val userAnswers = emptyUserAnswers
-            .withPage(ForwardLookingThresholdPage, false)
-            .withPage(BackwardLookingThresholdPage, true)
-            .withPage(BackwardLookingDatePage, today)
+        "only the BackwardLookingDate date is present and it is not the 1st of the month" in {
+          val backwardLookDate = firstOfThisMonth.minusMonths(1).plusDays(14)
 
           checkPage(
-            userAnswers,
+            backwardLookOnly(backwardLookDate),
             expectedIsForwardLook = false,
             expectedLiabilityStartDate = firstOfThisMonth,
-            expectedBackwardLookDate = Some(today),
+            expectedBackwardLookDate = Some(backwardLookDate),
+            expectedDeadline = firstOfThisMonth.plusMonths(1),
+            expectedIsLate = false
+          )
+        }
+
+        "only the BackwardLookingDate date is present and it is the 1st of the month" in {
+          checkPage(
+            backwardLookOnly(firstOfThisMonth),
+            expectedIsForwardLook = false,
+            expectedLiabilityStartDate = firstOfThisMonth,
+            expectedBackwardLookDate = Some(firstOfThisMonth),
             expectedDeadline = firstOfThisMonth.plusMonths(1),
             expectedIsLate = false
           )
@@ -125,16 +182,10 @@ class LiabilityDateControllerSpec extends SpecBase {
 
         "both dates are present and the BackwardLookingDate liability start date is earlier than the ExpectToExceedThreshold date" in {
           val forwardLookDate  = today.minusDays(5)
-          val backwardLookDate = firstOfThisMonth.minusMonths(2).plusDays(2)
-
-          val userAnswers = emptyUserAnswers
-            .withPage(ForwardLookingThresholdPage, true)
-            .withPage(ExpectToExceedThresholdPage, forwardLookDate)
-            .withPage(BackwardLookingThresholdPage, true)
-            .withPage(BackwardLookingDatePage, backwardLookDate)
+          val backwardLookDate = firstOfThisMonth.minusMonths(3).plusDays(2)
 
           checkPage(
-            userAnswers,
+            bothLooks(forwardLookDate, backwardLookDate),
             expectedIsForwardLook = false,
             expectedLiabilityStartDate = firstOfThisMonth.minusMonths(2),
             expectedBackwardLookDate = Some(backwardLookDate),
@@ -142,64 +193,14 @@ class LiabilityDateControllerSpec extends SpecBase {
             expectedIsLate = true
           )
         }
-
-        "the raw ExpectToExceedThreshold date is earlier, but the BackwardLookingDate liability start date is earlier" in {
-          assume(today.getDayOfMonth > 2, "needs an ExpectToExceedThreshold date in this month after the 1st")
-
-          val forwardLookDate  = firstOfThisMonth.plusDays(1)
-          val backwardLookDate = today
-
-          val userAnswers = emptyUserAnswers
-            .withPage(ExpectToExceedThresholdPage, forwardLookDate)
-            .withPage(BackwardLookingDatePage, backwardLookDate)
-
-          checkPage(
-            userAnswers,
-            expectedIsForwardLook = false,
-            expectedLiabilityStartDate = firstOfThisMonth,
-            expectedBackwardLookDate = Some(backwardLookDate),
-            expectedDeadline = firstOfThisMonth.plusMonths(1),
-            expectedIsLate = false
-          )
-        }
-
-        "both dates are present and the liability start dates are the same" in {
-          val userAnswers = emptyUserAnswers
-            .withPage(ExpectToExceedThresholdPage, firstOfThisMonth)
-            .withPage(BackwardLookingDatePage, today)
-
-          checkPage(
-            userAnswers,
-            expectedIsForwardLook = false,
-            expectedLiabilityStartDate = firstOfThisMonth,
-            expectedBackwardLookDate = Some(today),
-            expectedDeadline = firstOfThisMonth.plusMonths(1),
-            expectedIsLate = false
-          )
-        }
-      }
-
-      "only check the dates are present, ignoring the Yes/No answers" in {
-        val userAnswers = emptyUserAnswers.withPage(BackwardLookingDatePage, today)
-
-        checkPage(
-          userAnswers,
-          expectedIsForwardLook = false,
-          expectedLiabilityStartDate = firstOfThisMonth,
-          expectedBackwardLookDate = Some(today),
-          expectedDeadline = firstOfThisMonth.plusMonths(1),
-          expectedIsLate = false
-        )
       }
 
       "show the on time content when today is the registration deadline" in {
         val forwardLookDate = today.minusMonths(1)
         assume(forwardLookDate.plusMonths(1) == today, "today has no matching day in the previous month")
 
-        val userAnswers = emptyUserAnswers.withPage(ExpectToExceedThresholdPage, forwardLookDate)
-
         checkPage(
-          userAnswers,
+          forwardLookOnly(forwardLookDate),
           expectedIsForwardLook = true,
           expectedLiabilityStartDate = forwardLookDate,
           expectedBackwardLookDate = None,
@@ -211,10 +212,8 @@ class LiabilityDateControllerSpec extends SpecBase {
       "show the late content when today is after the registration deadline" in {
         val forwardLookDate = today.minusMonths(1).minusDays(1)
 
-        val userAnswers = emptyUserAnswers.withPage(ExpectToExceedThresholdPage, forwardLookDate)
-
         checkPage(
-          userAnswers,
+          forwardLookOnly(forwardLookDate),
           expectedIsForwardLook = true,
           expectedLiabilityStartDate = forwardLookDate,
           expectedBackwardLookDate = None,
@@ -223,33 +222,40 @@ class LiabilityDateControllerSpec extends SpecBase {
         )
       }
 
-      "redirect to Journey Recovery when neither the ExpectToExceedThreshold nor BackwardLookingDate date is present" in {
-        val userAnswers = emptyUserAnswers
-          .withPage(ForwardLookingThresholdPage, true)
-          .withPage(BackwardLookingThresholdPage, true)
+      "redirect to Journey Recovery" when {
 
-        val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-        running(application) {
-          val request = FakeRequest(GET, liabilityDateRoute)
-
-          val result = route(application, request).value
-
-          status(result)                 mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        "neither the ExpectToExceedThreshold nor BackwardLookingDate date is present" in {
+          checkRedirectsToJourneyRecovery(
+            Some(
+              emptyUserAnswers
+                .withPage(ForwardLookingThresholdPage, true)
+                .withPage(BackwardLookingThresholdPage, true)
+            )
+          )
         }
-      }
 
-      "redirect to Journey Recovery when no existing data is found" in {
-        val application = applicationBuilder(userAnswers = None).build()
+        "both the ForwardLookingThreshold and BackwardLookingThreshold answers are No" in {
+          checkRedirectsToJourneyRecovery(
+            Some(
+              emptyUserAnswers
+                .withPage(ForwardLookingThresholdPage, false)
+                .withPage(BackwardLookingThresholdPage, false)
+            )
+          )
+        }
 
-        running(application) {
-          val request = FakeRequest(GET, liabilityDateRoute)
+        "the ForwardLookingThreshold and BackwardLookingThreshold answers are missing" in {
+          checkRedirectsToJourneyRecovery(
+            Some(
+              emptyUserAnswers
+                .withPage(ExpectToExceedThresholdPage, today)
+                .withPage(BackwardLookingDatePage, today)
+            )
+          )
+        }
 
-          val result = route(application, request).value
-
-          status(result)                 mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        "no existing data is found" in {
+          checkRedirectsToJourneyRecovery(None)
         }
       }
     }

@@ -17,7 +17,6 @@
 package models
 
 import base.SpecBase
-import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.all.CheckboxItemViewModel
 
