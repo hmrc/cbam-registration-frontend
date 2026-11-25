@@ -16,11 +16,24 @@
 
 package pages
 
+import models.UserAnswers
 import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
 case object SectorsToImportPage extends QuestionPage[Set[String]] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "sectorsToImport"
+
+  // TODO: Replace with the next page in the import details journey once it exists
+  override protected def normalModeNextPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(SectorsToImportPage) match {
+      case Some(_) => Call("GET", "/todo-25")
+      case _       => controllers.routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  // TODO: Replace with the import details check your answers page once it exists
+  override protected def checkModeNextPage(userAnswers: UserAnswers, hasAnswerChanged: Boolean): Call =
+    controllers.routes.JourneyRecoveryController.onPageLoad()
 }
