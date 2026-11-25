@@ -128,7 +128,9 @@ class BackwardLookingThresholdControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute, expectedHasAnswerChanged = false)))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute, expectedHasAnswerChanged = false))
+          )
           .build()
 
       running(application) {

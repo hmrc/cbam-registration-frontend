@@ -27,6 +27,10 @@ import javax.inject.{Inject, Singleton}
 class Navigator @Inject() {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+
+    // ---------------------------------
+    // liability
+    // ---------------------------------
     case ForwardLookingThresholdPage  =>
       userAnswers =>
         userAnswers.get(ForwardLookingThresholdPage) match {
@@ -56,10 +60,24 @@ class Navigator @Inject() {
           case Some(_) => controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
           case _       => routes.JourneyRecoveryController.onPageLoad()
         }
+
+    // ---------------------------------
+    // importDetails
+    // ---------------------------------
+    case SectorsToImportPage          =>
+      userAnswers =>
+        userAnswers.get(SectorsToImportPage) match {
+          case Some(_) => Call("GET", "/todo-25")
+          case _       => routes.JourneyRecoveryController.onPageLoad()
+        }
     case _                            => _ => routes.ServiceEntryController.onPageLoad()
   }
 
   private val checkRouteMap: Page => UserAnswers => Boolean => Call = {
+
+    // ---------------------------------
+    // liability
+    // ---------------------------------
     case ForwardLookingThresholdPage  =>
       userAnswers =>
         hasAnswerChanged =>

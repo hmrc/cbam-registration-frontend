@@ -58,3 +58,8 @@ GET         /sign-in-importer-account                     controllers.checkDetai
 GET         /no-eori-number                               controllers.checkDetails.NoEORINumberController.onPageLoad()
 
 GET         /subscribe-customs-declaration-service        controllers.checkDetails.NeedToSubscribeCDSController.onPageLoad()
+
+GET         /which-sectors                                controllers.importDetails.SectorsToImportController.onPageLoad(mode: Mode = NormalMode)
+POST        /which-sectors                                controllers.importDetails.SectorsToImportController.onSubmit(mode: Mode = NormalMode)
+GET         /change-which-sectors                         controllers.importDetails.SectorsToImportController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-which-sectors                         controllers.importDetails.SectorsToImportController.onSubmit(mode: Mode = CheckMode)
