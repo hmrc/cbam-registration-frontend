@@ -63,3 +63,5 @@ GET         /which-sectors                                controllers.importDeta
 POST        /which-sectors                                controllers.importDetails.SectorsToImportController.onSubmit(mode: Mode = NormalMode)
 GET         /change-which-sectors                         controllers.importDetails.SectorsToImportController.onPageLoad(mode: Mode = CheckMode)
 POST        /change-which-sectors                         controllers.importDetails.SectorsToImportController.onSubmit(mode: Mode = CheckMode)
+
+GET        /liability-date                                controllers.liability.LiabilityDateController.onPageLoad()

@@ -32,7 +32,7 @@
     <div class="govuk-button-group">
       @govukButton(
         ButtonViewModel(messages("site.confirm")).withAttribute("id" -> "continue")
-          .asLink("/todo-15") // TODO: Screen 15 (CDB-506)
+          .asLink(controllers.liability.routes.LiabilityDateController.onPageLoad().url)
       )
       @link(
         href = "/todo-answers-saved", // TODO: URL for answers saved page
