@@ -23,13 +23,24 @@ echo "$className;format="decap"$.error.required = Select $className;format="deca
 echo "$className;format="decap"$.change.hidden = $className$" >> ../conf/messages.en
 
 echo "Adding to ModelGenerators"
+if ! grep -q "^import org.scalacheck" ../test-utils/generators/ModelGenerators.scala; then
+  awk '/^package generators/ {\
+      print;\
+      print "";\
+      print "import models.*";\
+      print "import org.scalacheck.Arbitrary.arbitrary";\
+      print "import org.scalacheck.{Arbitrary, Gen}";\
+      next }1' ../test-utils/generators/ModelGenerators.scala > tmp && mv tmp ../test-utils/generators/ModelGenerators.scala
+fi
 awk '/trait ModelGenerators/ {\
+    empty = sub(/\{\}/, "{");\
     print;\
     print "";\
     print "  implicit lazy val arbitrary$className$: Arbitrary[$className$] =";\
     print "    Arbitrary {";\
     print "      Gen.oneOf($className$.values.toSeq)";\
     print "    }";\
+    if (empty) print "}";\
     next }1' ../test-utils/generators/ModelGenerators.scala > tmp && mv tmp ../test-utils/generators/ModelGenerators.scala
 
 echo "Migration $className;format="snake"$ completed"

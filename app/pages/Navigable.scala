@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package navigation
+package pages
 
-import models.{Mode, UserAnswers}
-import org.scalatest.Assertions.fail
-import pages.*
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import play.api.mvc.Call
 
-class FakeNavigator(desiredRoute: Call, expectedHasAnswerChanged: Boolean = true) extends Navigator {
+trait Navigable {
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean): Call =
-    if (hasAnswerChanged == expectedHasAnswerChanged) {
-      desiredRoute
-    } else {
-      fail(s"Expected hasAnswerChanged to be $expectedHasAnswerChanged")
-    }
+  protected def normalModeNextPage(userAnswers: UserAnswers): Call
+
+  protected def checkModeNextPage(userAnswers: UserAnswers, hasAnswerChanged: Boolean): Call
+
+  final def nextPage(mode: Mode, userAnswers: UserAnswers, hasAnswerChanged: Boolean = true): Call = mode match {
+    case NormalMode => normalModeNextPage(userAnswers)
+    case CheckMode  => checkModeNextPage(userAnswers, hasAnswerChanged)
+  }
 }
