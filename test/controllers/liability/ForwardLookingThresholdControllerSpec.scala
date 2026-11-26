@@ -18,13 +18,10 @@ package controllers.liability
 
 import base.SpecBase
 import forms.liability.ForwardLookingThresholdFormProvider
-import models.NormalMode
-import navigation.{FakeNavigator, Navigator}
+import models.{CheckMode, NormalMode}
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{times, verify, when}
 import pages.{ExpectToExceedThresholdPage, ForwardLookingThresholdPage}
-import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.liability.ForwardLookingThresholdView
@@ -34,11 +31,11 @@ import scala.concurrent.Future
 
 class ForwardLookingThresholdControllerSpec extends SpecBase {
 
-  def onwardRoute = Call("GET", "/foo")
-
   val form = new ForwardLookingThresholdFormProvider()()
 
-  lazy val forwardLookingThresholdRoute: String = routes.ForwardLookingThresholdController.onPageLoad(NormalMode).url
+  lazy val forwardLookingThresholdRoute: String      = routes.ForwardLookingThresholdController.onPageLoad(NormalMode).url
+  lazy val forwardLookingThresholdCheckRoute: String =
+    routes.ForwardLookingThresholdController.onPageLoad(CheckMode).url
 
   "ForwardLookingThreshold Controller" must {
 
@@ -82,7 +79,6 @@ class ForwardLookingThresholdControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
           .build()
 
       running(application) {
@@ -93,7 +89,7 @@ class ForwardLookingThresholdControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual routes.ExpectToExceedThresholdController.onPageLoad(NormalMode).url
       }
     }
 
@@ -117,31 +113,30 @@ class ForwardLookingThresholdControllerSpec extends SpecBase {
       }
     }
 
-    "redirect to the next page with hasAnswerChanged = false when the answer has not changed" in {
+    "redirect to check your answers in CheckMode when the answer has not changed" in {
       val userAnswers = emptyUserAnswers.withPage(ForwardLookingThresholdPage, false)
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute, expectedHasAnswerChanged = false)))
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, forwardLookingThresholdRoute)
+          FakeRequest(POST, forwardLookingThresholdCheckRoute)
             .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual routes.LiabilityCheckYourAnswersController.onPageLoad().url
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswers))(any())
       }
     }
 
-    "redirect to the next page with hasAnswerChanged = true and clear the forward looking date when the answer changes from Yes to No" in {
+    "redirect to the next page and clear the forward looking date when the answer changes from Yes to No" in {
       val userAnswers = emptyUserAnswers
         .withPage(ForwardLookingThresholdPage, true)
         .withPage(ExpectToExceedThresholdPage, LocalDate.now(clock))
@@ -150,7 +145,6 @@ class ForwardLookingThresholdControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
           .build()
 
       running(application) {
@@ -161,7 +155,7 @@ class ForwardLookingThresholdControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual routes.BackwardLookingThresholdController.onPageLoad(NormalMode).url
 
         verify(mockUserAnswersConnector, times(1)).set(
           eqTo(emptyUserAnswers.withPage(ForwardLookingThresholdPage, false))

@@ -20,7 +20,6 @@ import connectors.UserAnswersConnector
 import controllers.actions.*
 import forms.liability.ExpectToExceedThresholdFormProvider
 import models.Mode
-import navigation.Navigator
 import pages.ExpectToExceedThresholdPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,7 +32,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class ExpectToExceedThresholdController @Inject() (
     override val messagesApi: MessagesApi,
     userAnswersConnector: UserAnswersConnector,
-    navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
@@ -69,7 +67,7 @@ class ExpectToExceedThresholdController @Inject() (
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(ExpectToExceedThresholdPage, value))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ExpectToExceedThresholdPage, mode, updatedAnswers))
+            } yield Redirect(ExpectToExceedThresholdPage.nextPage(mode, updatedAnswers))
         )
   }
 }

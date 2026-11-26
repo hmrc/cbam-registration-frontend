@@ -4,15 +4,13 @@ import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBase
 import forms.$className$FormProvider
-import models.{NormalMode, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.$className$Page
 import play.api.i18n.Messages
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.$className$View
@@ -25,8 +23,6 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new $className$FormProvider()
   private def form = formProvider()
-
-  def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = LocalDate.now(ZoneOffset.UTC)
 
@@ -81,16 +77,13 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
           .build()
 
       running(application) {
         val result = route(application, postRequest()).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual $className$Page.nextPage(NormalMode, emptyUserAnswers).url
       }
     }
 

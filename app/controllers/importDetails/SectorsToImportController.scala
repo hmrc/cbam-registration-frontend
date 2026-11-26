@@ -20,7 +20,6 @@ import connectors.UserAnswersConnector
 import controllers.actions.*
 import forms.SectorsToImportFormProvider
 import models.{Mode, SectorsToImport}
-import navigation.Navigator
 import pages.SectorsToImportPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class SectorsToImportController @Inject() (
     override val messagesApi: MessagesApi,
     userAnswersConnector: UserAnswersConnector,
-    navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
@@ -77,7 +75,7 @@ class SectorsToImportController @Inject() (
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(SectorsToImportPage, value))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SectorsToImportPage, mode, updatedAnswers))
+            } yield Redirect(SectorsToImportPage.nextPage(mode, updatedAnswers))
         )
   }
 }

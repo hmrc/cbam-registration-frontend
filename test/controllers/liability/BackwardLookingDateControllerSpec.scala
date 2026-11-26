@@ -19,14 +19,12 @@ package controllers.liability
 import base.SpecBase
 import forms.liability.BackwardLookingDateFormProvider
 import models.NormalMode
-import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.BackwardLookingDatePage
 import play.api.i18n.Messages
-import play.api.inject.bind
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Call}
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.liability.BackwardLookingDateView
@@ -40,8 +38,6 @@ class BackwardLookingDateControllerSpec extends SpecBase with MockitoSugar {
 
   private val formProvider = new BackwardLookingDateFormProvider()
   private def form         = formProvider()
-
-  def onwardRoute = Call("GET", "/foo")
 
   val validAnswer: LocalDate = LocalDate.now(ZoneId.of("Europe/London"))
 
@@ -99,16 +95,15 @@ class BackwardLookingDateControllerSpec extends SpecBase with MockitoSugar {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
           .build()
 
       running(application) {
         val result = route(application, postRequest()).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual controllers.liability.routes.LiabilityCheckYourAnswersController
+          .onPageLoad()
+          .url
       }
     }
 

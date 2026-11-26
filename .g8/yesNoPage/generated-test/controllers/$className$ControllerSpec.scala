@@ -2,14 +2,11 @@ package controllers
 
 import base.SpecBase
 import forms.$className$FormProvider
-import models.{NormalMode, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
+import models.NormalMode
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.$className$Page
-import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.$className$View
@@ -17,8 +14,6 @@ import views.html.$className$View
 import scala.concurrent.Future
 
 class $className$ControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new $className$FormProvider()
   val form = formProvider()
@@ -67,9 +62,6 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
           .build()
 
       running(application) {
@@ -80,7 +72,7 @@ class $className$ControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual $className$Page.nextPage(NormalMode, emptyUserAnswers).url
       }
     }
 

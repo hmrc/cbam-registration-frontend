@@ -18,11 +18,25 @@ package pages
 
 import java.time.LocalDate
 
+import models.{NormalMode, UserAnswers}
 import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
 case object ExpectToExceedThresholdPage extends QuestionPage[LocalDate] {
 
   override def path: JsPath = JsPath \ toString
 
   override def toString: String = "expectToExceedThreshold"
+
+  override protected def normalModeNextPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ExpectToExceedThresholdPage) match {
+      case Some(_) => controllers.liability.routes.BackwardLookingThresholdController.onPageLoad(NormalMode)
+      case _       => controllers.routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  override protected def checkModeNextPage(userAnswers: UserAnswers, hasAnswerChanged: Boolean): Call =
+    userAnswers.get(ExpectToExceedThresholdPage) match {
+      case Some(_) => controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+      case _       => controllers.routes.JourneyRecoveryController.onPageLoad()
+    }
 }

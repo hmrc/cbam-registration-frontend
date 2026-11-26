@@ -20,7 +20,6 @@ import connectors.UserAnswersConnector
 import controllers.actions.*
 import forms.liability.BackwardLookingThresholdFormProvider
 import models.Mode
-import navigation.Navigator
 import pages.BackwardLookingThresholdPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class BackwardLookingThresholdController @Inject() (
     override val messagesApi: MessagesApi,
     userAnswersConnector: UserAnswersConnector,
-    navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
@@ -68,7 +66,7 @@ class BackwardLookingThresholdController @Inject() (
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(BackwardLookingThresholdPage, value))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(BackwardLookingThresholdPage, mode, updatedAnswers, hasChanged))
+            } yield Redirect(BackwardLookingThresholdPage.nextPage(mode, updatedAnswers, hasChanged))
         )
   }
 }

@@ -18,14 +18,11 @@ package controllers.liability
 
 import base.SpecBase
 import forms.liability.BackwardLookingThresholdFormProvider
-import models.NormalMode
-import navigation.{FakeNavigator, Navigator}
+import models.{CheckMode, NormalMode}
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{times, verify, when}
-import pages.{BackwardLookingDatePage, BackwardLookingThresholdPage}
+import pages.{BackwardLookingDatePage, BackwardLookingThresholdPage, ForwardLookingThresholdPage}
 import play.api.data.Form
-import play.api.inject.bind
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import views.html.liability.BackwardLookingThresholdView
@@ -35,12 +32,12 @@ import scala.concurrent.Future
 
 class BackwardLookingThresholdControllerSpec extends SpecBase {
 
-  def onwardRoute = Call("GET", "/foo")
-
   val formProvider        = new BackwardLookingThresholdFormProvider()
   val form: Form[Boolean] = formProvider()
 
-  lazy val backwardLookingThresholdRoute: String = routes.BackwardLookingThresholdController.onPageLoad(NormalMode).url
+  lazy val backwardLookingThresholdRoute: String      = routes.BackwardLookingThresholdController.onPageLoad(NormalMode).url
+  lazy val backwardLookingThresholdCheckRoute: String =
+    routes.BackwardLookingThresholdController.onPageLoad(CheckMode).url
 
   "BackwardLookingThreshold Controller" must {
 
@@ -83,10 +80,7 @@ class BackwardLookingThresholdControllerSpec extends SpecBase {
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          )
+        applicationBuilder(userAnswers = Some(emptyUserAnswers.withPage(ForwardLookingThresholdPage, true)))
           .build()
 
       running(application) {
@@ -97,7 +91,7 @@ class BackwardLookingThresholdControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual routes.BackwardLookingDateController.onPageLoad(NormalMode).url
       }
     }
 
@@ -121,34 +115,32 @@ class BackwardLookingThresholdControllerSpec extends SpecBase {
       }
     }
 
-    "redirect to the next page with hasAnswerChanged = false when the answer has not changed" in {
+    "redirect to check your answers in CheckMode when the answer has not changed" in {
       val userAnswers = emptyUserAnswers.withPage(BackwardLookingThresholdPage, false)
 
       when(mockUserAnswersConnector.set(any())(any())) thenReturn Future.successful(true)
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute, expectedHasAnswerChanged = false))
-          )
           .build()
 
       running(application) {
         val request =
-          FakeRequest(POST, backwardLookingThresholdRoute)
+          FakeRequest(POST, backwardLookingThresholdCheckRoute)
             .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual routes.LiabilityCheckYourAnswersController.onPageLoad().url
 
         verify(mockUserAnswersConnector, times(1)).set(eqTo(userAnswers))(any())
       }
     }
 
-    "redirect to the next page with hasAnswerChanged = true and clear the backward looking date when the answer changes from Yes to No" in {
+    "redirect to the next page and clear the backward looking date when the answer changes from Yes to No" in {
       val userAnswers = emptyUserAnswers
+        .withPage(ForwardLookingThresholdPage, true)
         .withPage(BackwardLookingThresholdPage, true)
         .withPage(BackwardLookingDatePage, LocalDate.now(clock))
 
@@ -156,7 +148,6 @@ class BackwardLookingThresholdControllerSpec extends SpecBase {
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[Navigator].toInstance(new FakeNavigator(onwardRoute)))
           .build()
 
       running(application) {
@@ -167,10 +158,12 @@ class BackwardLookingThresholdControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result)                 mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual routes.LiabilityCheckYourAnswersController.onPageLoad().url
 
         verify(mockUserAnswersConnector, times(1)).set(
-          eqTo(emptyUserAnswers.withPage(BackwardLookingThresholdPage, false))
+          eqTo(
+            emptyUserAnswers.withPage(ForwardLookingThresholdPage, true).withPage(BackwardLookingThresholdPage, false)
+          )
         )(any())
       }
     }

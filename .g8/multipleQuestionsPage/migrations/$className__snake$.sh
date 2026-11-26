@@ -27,7 +27,17 @@ echo "$className;format="decap"$.$field1Name$.change.hidden = $field1Name$" >> .
 echo "$className;format="decap"$.$field2Name$.change.hidden = $field2Name$" >> ../conf/messages.en
 
 echo "Adding to ModelGenerators"
+if ! grep -q "^import org.scalacheck" ../test-utils/generators/ModelGenerators.scala; then
+  awk '/^package generators/ {\
+      print;\
+      print "";\
+      print "import models.*";\
+      print "import org.scalacheck.Arbitrary.arbitrary";\
+      print "import org.scalacheck.{Arbitrary, Gen}";\
+      next }1' ../test-utils/generators/ModelGenerators.scala > tmp && mv tmp ../test-utils/generators/ModelGenerators.scala
+fi
 awk '/trait ModelGenerators/ {\
+    empty = sub(/\{\}/, "{");\
     print;\
     print "";\
     print "  implicit lazy val arbitrary$className$: Arbitrary[$className$] =";\
@@ -37,6 +47,7 @@ awk '/trait ModelGenerators/ {\
     print "        $field2Name$ <- arbitrary[String]";\
     print "      } yield $className$($field1Name$, $field2Name$)";\
     print "    }";\
+    if (empty) print "}";\
     next }1' ../test-utils/generators/ModelGenerators.scala > tmp && mv tmp ../test-utils/generators/ModelGenerators.scala
 
 echo "Migration $className;format="snake"$ completed"

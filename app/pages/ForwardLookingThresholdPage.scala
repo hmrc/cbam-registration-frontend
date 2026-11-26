@@ -16,8 +16,9 @@
 
 package pages
 
-import models.UserAnswers
+import models.{CheckMode, NormalMode, UserAnswers}
 import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
 import scala.util.Try
 
@@ -32,5 +33,25 @@ case object ForwardLookingThresholdPage extends QuestionPage[Boolean] {
       userAnswers.remove(ExpectToExceedThresholdPage)
     } else {
       super.cleanup(value, userAnswers)
+    }
+
+  override protected def normalModeNextPage(userAnswers: UserAnswers): Call =
+    userAnswers.get(ForwardLookingThresholdPage) match {
+      case Some(true)  => controllers.liability.routes.ExpectToExceedThresholdController.onPageLoad(NormalMode)
+      case Some(false) => controllers.liability.routes.BackwardLookingThresholdController.onPageLoad(NormalMode)
+      case _           => controllers.routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  override protected def checkModeNextPage(userAnswers: UserAnswers, hasAnswerChanged: Boolean): Call =
+    if (hasAnswerChanged) {
+      (userAnswers.get(ForwardLookingThresholdPage), userAnswers.get(BackwardLookingThresholdPage)) match {
+        case (Some(true), Some(_))      =>
+          controllers.liability.routes.ExpectToExceedThresholdController.onPageLoad(CheckMode)
+        case (Some(false), Some(true))  => controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+        case (Some(false), Some(false)) => controllers.liability.routes.DoNotRegisterController.onPageLoad()
+        case _                          => controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
+    } else {
+      controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
     }
 }

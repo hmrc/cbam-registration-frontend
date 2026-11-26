@@ -16,8 +16,9 @@
 
 package pages
 
-import models.UserAnswers
+import models.{CheckMode, NormalMode, UserAnswers}
 import play.api.libs.json.JsPath
+import play.api.mvc.Call
 
 import scala.util.Try
 
@@ -32,5 +33,25 @@ case object BackwardLookingThresholdPage extends QuestionPage[Boolean] {
       userAnswers.remove(BackwardLookingDatePage)
     } else {
       super.cleanup(value, userAnswers)
+    }
+
+  override protected def normalModeNextPage(userAnswers: UserAnswers): Call =
+    (userAnswers.get(BackwardLookingThresholdPage), userAnswers.get(ForwardLookingThresholdPage)) match {
+      case (Some(true), Some(_))      => controllers.liability.routes.BackwardLookingDateController.onPageLoad(NormalMode)
+      case (Some(false), Some(true))  => controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+      case (Some(false), Some(false)) => controllers.liability.routes.DoNotRegisterController.onPageLoad()
+      case _                          => controllers.routes.JourneyRecoveryController.onPageLoad()
+    }
+
+  override protected def checkModeNextPage(userAnswers: UserAnswers, hasAnswerChanged: Boolean): Call =
+    if (hasAnswerChanged) {
+      (userAnswers.get(BackwardLookingThresholdPage), userAnswers.get(ForwardLookingThresholdPage)) match {
+        case (Some(true), Some(_))      => controllers.liability.routes.BackwardLookingDateController.onPageLoad(CheckMode)
+        case (Some(false), Some(true))  => controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
+        case (Some(false), Some(false)) => controllers.liability.routes.DoNotRegisterController.onPageLoad()
+        case _                          => controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
+    } else {
+      controllers.liability.routes.LiabilityCheckYourAnswersController.onPageLoad()
     }
 }

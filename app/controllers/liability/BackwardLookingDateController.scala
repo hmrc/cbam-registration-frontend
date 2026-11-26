@@ -20,7 +20,6 @@ import connectors.UserAnswersConnector
 import controllers.actions.*
 import forms.liability.BackwardLookingDateFormProvider
 import models.Mode
-import navigation.Navigator
 import pages.BackwardLookingDatePage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,7 +32,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class BackwardLookingDateController @Inject() (
     override val messagesApi: MessagesApi,
     userAnswersConnector: UserAnswersConnector,
-    navigator: Navigator,
     identify: IdentifierAction,
     getData: DataRetrievalAction,
     requireData: DataRequiredAction,
@@ -69,7 +67,7 @@ class BackwardLookingDateController @Inject() (
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(BackwardLookingDatePage, value))
               _              <- userAnswersConnector.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(BackwardLookingDatePage, mode, updatedAnswers))
+            } yield Redirect(BackwardLookingDatePage.nextPage(mode, updatedAnswers))
         )
   }
 }
