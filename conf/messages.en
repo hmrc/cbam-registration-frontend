@@ -169,3 +169,13 @@ sectorsToImport.hint = Sectors you do not select will be recorded as having 0kg 
 sectorsToImport.checkYourAnswersLabel = Which CBAM sectors do you expect to import goods from?
 sectorsToImport.error.required = Select which CBAM sectors you expect to import goods from
 sectorsToImport.change.hidden = which CBAM sectors you expect to import goods from
+
+liabilityDate.title = Liability start date for CBAM
+liabilityDate.heading = Liability start date for CBAM
+liabilityDate.forwardLook.p1 = Your organisation’s liability for CBAM started on {0}.
+liabilityDate.forwardLook.p2 = This is the date you first expected to import £50,000 or more worth of CBAM goods into the UK within the next 30 days.
+liabilityDate.backwardLook.p1 = Your imports of CBAM goods reached £50,000 or more on {0}.
+liabilityDate.backwardLook.p2 = This means your liability for CBAM started on {0} because CBAM is tested on the first day of the month.
+liabilityDate.backwardLook.linkText = Find out more information about when you are liable to register for CBAM (opens in new tab)
+liabilityDate.deadline.onTime = You must submit your registration by {0}. If your submission is late, you may be charged a penalty.
+liabilityDate.deadline.late = Your deadline to submit your CBAM registration was {0}. Submit your registration as soon as possible. Late submissions may be charged a penalty.

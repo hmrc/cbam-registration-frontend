@@ -36,7 +36,7 @@ class LiabilityCheckYourAnswersViewSpec extends ViewTestHelpers with TestData {
     checkContentOnPage("Answer", ".govuk-summary-list__value")
     checkContentOnPage("Change", ".govuk-summary-list__actions")
 
-    checkLinkOnPage("Confirm", "/todo-15", ".govuk-button")
+    checkLinkOnPage("Confirm", controllers.liability.routes.LiabilityDateController.onPageLoad().url, ".govuk-button")
     checkLinkOnPage("Save and come back later", "/todo-answers-saved", ".govuk-button-group > .govuk-link")
   }
 }

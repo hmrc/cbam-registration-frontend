@@ -1,0 +1,79 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import java.time.LocalDate
+@import utils.DateTimeFormats
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        link: components.Link
+)
+
+@(
+    isForwardLook: Boolean,
+    liabilityStartDate: LocalDate,
+    backwardLookDate: Option[LocalDate],
+    registrationDeadline: LocalDate,
+    isLate: Boolean
+)(implicit request: Request[_], messages: Messages)
+
+@formatDate(date: LocalDate) = @{
+    DateTimeFormats.dateTimeFormat()(messages.lang).format(date)
+}
+
+@layout(pageTitle = titleNoForm(messages("liabilityDate.title"))) {
+
+    <h1 class="govuk-heading-l">@messages("liabilityDate.heading")</h1>
+
+    @if(isForwardLook) {
+        <p class="govuk-body" id="liability-start">@messages("liabilityDate.forwardLook.p1", formatDate(liabilityStartDate))</p>
+
+        <p class="govuk-body" id="forward-look-explanation">@messages("liabilityDate.forwardLook.p2")</p>
+    } else {
+        @backwardLookDate.map { reachedDate =>
+            <p class="govuk-body" id="threshold-reached">@messages("liabilityDate.backwardLook.p1", formatDate(reachedDate))</p>
+
+            <p class="govuk-body" id="liability-start">@messages("liabilityDate.backwardLook.p2", formatDate(liabilityStartDate))</p>
+
+            <p class="govuk-body" id="guidance">
+                @link(
+                    href = "https://www.gov.uk/guidance/work-out-the-date-youll-need-to-register-for-carbon-border-adjustment-mechanism-cbam",
+                    key = "liabilityDate.backwardLook.linkText",
+                    newTab = true,
+                    fullStop = true
+                )
+            </p>
+        }
+    }
+
+    @if(isLate) {
+        <p class="govuk-body" id="deadline">@messages("liabilityDate.deadline.late", formatDate(registrationDeadline))</p>
+    } else {
+        <p class="govuk-body" id="deadline">@messages("liabilityDate.deadline.onTime", formatDate(registrationDeadline))</p>
+    }
+
+    <div class="govuk-button-group">
+        @govukButton(
+            ButtonViewModel(messages("site.saveAndContinue")).withAttribute("id" -> "continue")
+            .asLink(controllers.checkDetails.routes.CheckOrganisationDetailsController.onPageLoad().url)
+        )
+        @link(
+            href = "/todo-answers-saved",
+            key = messages("site.saveAndComeBackLater")
+        )
+    </div>
+}
